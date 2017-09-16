@@ -22,9 +22,10 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directory
+# Dependency directory (vendor is symlink to node_modules for IDE support)
 # https://docs.npmjs.com/cli/shrinkwrap#caveats
 node_modules
+vendor
 
 # Debug log from npm
 npm-debug.log
