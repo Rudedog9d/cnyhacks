@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var nunjucks = require('nunjucks');
 
 var index = require('./routes/index');
+var store = require('./routes/store');
+var admin = require('./routes/admin');
 var users = require('./routes/users');
 var config = require('./config');
 
@@ -28,8 +30,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// Set local variables to send on EVERY request
+app.locals = {
+    'ProjectName': config.ProjectName || 'CNY Hackathon'
+};
+
+// Set local variables to send on a per-request basis (user, ect)
+app.use(function (req, res, next) {
+    res.locals = { };
+    next();
+});
+
 app.use('/', index);
 app.use('/users', users);
+app.use('/store', store);
+app.use('/adminsonly', admin);
 app.use('/vendor', express.static('node_modules'));
 
 // catch 404 and forward to error handler

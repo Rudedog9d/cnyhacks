@@ -1,6 +1,7 @@
 config = {
     // development || production
-    mode: 'development'
+    mode: 'development',
+    ProjectName: 'Cold Stone Memery'
 };
 
 // default to production

@@ -1,6 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>{{ title }}</h1>
-  <p>Welcome to the {{ title }} Web CTF!</p>
+  <h2>Hello, World!</h2>
+  <div id="admin" class="hide">
+    <a href="/adminsonly">Adminitrative View</a>
+  </div>
+  <a href="/store">User View</a>
+{% endblock %}
+
+{% block footer %}
+<script>
+    $(document).ready(function () {
+        console.log(window.localStorage.isadmin);
+      if(window.localStorage.isadmin){
+          document.getElementById('admin').classList.remove('hide')
+      } else {
+          window.location = '/store'
+      }
+  })
+</script>
 {% endblock %}
