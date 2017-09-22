@@ -14,7 +14,7 @@
     "materialize-css": "^0.100.2",
     "morgan": "~1.8.1",
     "nunjucks": "^3.0.1",
-    "riotjs": "^1.0.4",
+    "riot": "^3.7.0",
     "serve-favicon": "~2.4.2"
   }
 }

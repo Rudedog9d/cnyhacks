@@ -1,8 +1,29 @@
 {% extends "layout.html" %}
 
+{% block head %}
+
+{{ super() }}
+
+<script type="riot/tag" src="/tags/store-list.tag.html"></script>
+<script type="riot/tag" src="/tags/item-card.tag.html"></script>
+
+{% endblock head %}
+
+
 {% block content %}
   <h1>Welcome to the {{ ProjectName }} Store! </h1>
-  <p>We have deals. We have the best deals.</p>
+  <p>We have memes. We have the best memes.</p>
 
+  <store-list></store-list>
 
 {% endblock %}
+
+{% block footer %}
+
+  <script>
+    $(document).ready(function () {
+        riot.mount('*')
+    });
+  </script>
+
+{% endblock footer %}
