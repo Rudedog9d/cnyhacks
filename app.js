@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var store = require('./routes/store');
 var admin = require('./routes/admin');
 var users = require('./routes/users');
+var db = require('./core/db');
 var config = require('./config');
 
 var app = express();
