@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {% block head %}
-    <title>{{ title }}</title>
-
     <!-- Vendor Stylesheets -->
     <link rel="stylesheet" href="/vendor/materialize-css/dist/css/materialize.min.css">
 
@@ -14,6 +11,9 @@
 
     <!-- Custom Stylesheets -->
     <link rel='stylesheet' href='/css/style.css' />
+
+    {% block head %}
+    <title>{{ title }}</title>
     {% endblock head %}
 </head>
 <body>
@@ -23,9 +23,13 @@
     <div class="nav-wrapper content-center">
         <a href="/" class="brand-logo">{{ ProjectName }}</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="#">Sass</a></li>
-            <li><a href="#">Components</a></li>
-            <li><a href="#">JavaScript</a></li>
+            <li><a href="/store">Store</a></li>
+            {% if user and user.username %}
+            <li><a href="/users/{{user.username}}">Account</a></li>
+            <li><a href="/users/logout" class="btn">Logout</a></li>
+            {% else %}
+            <li><a href="/users/login" class="btn">Login</a></li>
+            {% endif %}
         </ul>
     </div>
 </nav>

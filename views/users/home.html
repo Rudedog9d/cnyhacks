@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<title>{{ user.username }} - {{ ProjectName }}</title>
+
+{% endblock head %}
+
+{% block content %}
+
+<h1>Welcome back, {{ user.username }}!</h1>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+  $(document).ready(function () {
+//    riot.mount('*')
+  });
+</script>
+
+{% endblock footer %}
