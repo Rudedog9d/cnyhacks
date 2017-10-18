@@ -4,7 +4,7 @@
 
 {{ super() }}
 
-<script type="riot/tag" src="/tags/golden-store-list.tag.html"></script>
+<script type="riot/tag" src="/tags/golden-item.tag.html"></script>
 <script type="riot/tag" src="/tags/item-card.tag.html"></script>
 
 {% endblock head %}
@@ -31,7 +31,7 @@
       <p>Description: A flag, nimbus! <br>
         Golden Credits needed: 20
       </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Buy</a>
     </li>
     <li class="collection-item avatar">
       <i class="material-icons circle">folder</i>
@@ -55,8 +55,25 @@
       <p>Description: Hint for doing blah blah <br>
         Golden Credits needed: 2
       </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+      <!-- <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a> -->
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Buy</a>
     </li>
+
+    <!-- Modal Trigger -->
+    <!-- <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a> -->
+    <!--<button data-target="modal1" class="btn modal-trigger">Modal</button>-->
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>Purchase flag.txt</h4>
+        <p>Only 20 Golden Credits!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>
+      </div>
+    </div>
+
   </ul>
 
 
@@ -68,8 +85,14 @@
 {% block footer %}
 
   <script>
+    function onPurchase() {
+      console.log('purchase!')
+      
+    }
+
     $(document).ready(function () {
         riot.mount('*')
+        $('.modal').modal();
     });
   </script>
 
