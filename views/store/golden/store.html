@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+<script type="riot/tag" src="/tags/golden-store-list.tag.html"></script>
+<script type="riot/tag" src="/tags/item-card.tag.html"></script>
+
+{% endblock head %}
+
+
+{% block content %}
+  <div id="title" class="headers">
+    <h2>
+      Golden Store Items for Sale
+    </h2>
+    <p class="flow-text">
+      Use Golden Credits to earn awesome prizes!
+    </p>
+
+
+   <!-- <a class="waves-effect waves-light btn">Buy the thing</a> -->
+  </div>
+
+
+  <ul class="collection">
+    <li class="collection-item avatar">
+      <img src="/images/flag.jpeg" alt="" class="circle">
+      <span class="flow-text">Flag.txt</span>
+      <p>Description: A flag, nimbus! <br>
+        Golden Credits needed: 20
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+    </li>
+    <li class="collection-item avatar">
+      <i class="material-icons circle">folder</i>
+      <span class="flow-text">Challenge 1 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 1
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+    </li>
+    <li class="collection-item avatar">
+      <i class="material-icons circle green">insert_chart</i>
+      <span class="flow-text">Challenge 2 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 2
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+    </li>
+    <li class="collection-item avatar">
+      <i class="material-icons circle red">play_arrow</i>
+      <span class="flow-text">Challenge 3 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 2
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a>
+    </li>
+  </ul>
+
+
+
+<!-- <golden-store-list></golden-store-list> -->
+
+{% endblock %}
+
+{% block footer %}
+
+  <script>
+    $(document).ready(function () {
+        riot.mount('*')
+    });
+  </script>
+
+{% endblock footer %}
