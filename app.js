@@ -17,6 +17,9 @@ var users = require('./routes/users');
 var db = require('./core/db');
 var config = require('./config');
 
+// Set Default Config Values
+config.ProjectName = config.ProjectName || 'CNY Hackathon';
+
 var app = express();
 
 // Set up templating ( jinga style 8-D )
@@ -42,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set local variables to send on EVERY request
 app.locals = {
-    'ProjectName': config.ProjectName || 'CNY Hackathon'
+    'ProjectName': config.ProjectName
 };
 
 // Set local variables to send on a per-request basis (user, ect)
