@@ -1,7 +1,11 @@
+var config = require('../config');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('ColdStoneMemery.db');
+var db = new sqlite3.Database(config.ProjectName.replace(/ /g,'') + '.db');
 // var Database = require('better-sqlite3');
 // var db = new Database('../ColdStoneMemery.db');
+
+const USER_DB = 'users';
+const PRODUCTS_DB = 'products';
 
 /**
  * Create a table `name` in database with `fields`.
@@ -35,16 +39,15 @@ function createTable(name, fields, upsert) {
   // })
 }
 
-
 // Init DB
 db.serialize(function() {
-  createTable('memes', {
+  createTable(PRODUCTS_DB, {
     info: 'TEXT',
     cost: 'INTEGER',
     author: 'TEXT'
   }, true);
 
-  createTable('users', {
+  createTable(USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
     credits: 'INTEGER',
@@ -53,5 +56,7 @@ db.serialize(function() {
   }, true);
 });
 
-module.exports.db = db;
+module.exports._db = db;
+module.exports.USER_DB = USER_DB;
+module.exports.PRODUCTS_DB = PRODUCTS_DB;
 module.exports.createTable = createTable;

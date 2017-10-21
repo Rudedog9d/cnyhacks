@@ -4,8 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var expressSession = require('express-session');
+var flash = require('connect-flash');
+var passport = require('passport');
 var nunjucks = require('nunjucks');
 
+var auth = require('./core/auth');
 var index = require('./routes/index');
 var store = require('./routes/store');
 var admin = require('./routes/admin');
@@ -32,6 +36,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(flash());
+app.use(expressSession({secret: 'mySecretKey'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -42,8 +50,9 @@ app.locals = {
 
 // Set local variables to send on a per-request basis (user, ect)
 app.use(function (req, res, next) {
-    res.locals = { };
-    next();
+    // Send user with each request (Only for use by Express templates, not user)
+    res.locals.user = req.user;
+    return next();
 });
 
 app.use('/', index);
