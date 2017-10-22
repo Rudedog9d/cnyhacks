@@ -11,7 +11,7 @@ var WebStore;
   };
 
   WebStore.db.update = function () {
-  //  Do AJAX here
+    //  Do AJAX here
   };
 
 })();

@@ -24,9 +24,9 @@ var app = express();
 
 // Set up templating ( jinga style 8-D )
 nunjucks.configure(path.join(__dirname, 'views'), {
-    express: app,
-    watch: config.debug,
-    noCache: config.debug
+  express: app,
+  watch: config.debug,
+  noCache: config.debug
 });
 
 
@@ -34,7 +34,7 @@ nunjucks.configure(path.join(__dirname, 'views'), {
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(flash());
 app.use(expressSession({secret: 'mySecretKey'}));
@@ -45,14 +45,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set local variables to send on EVERY request
 app.locals = {
-    'ProjectName': config.ProjectName
+  'ProjectName': config.ProjectName
 };
 
 // Set local variables to send on a per-request basis (user, ect)
 app.use(function (req, res, next) {
-    // Send user with each request (Only for use by Express templates, not user)
-    res.locals.user = req.user;
-    return next();
+  // Send user with each request (Only for use by Express templates, not user)
+  res.locals.user = req.user;
+  return next();
 });
 
 app.use('/', index);
@@ -62,14 +62,14 @@ app.use('/adminsonly', admin);
 app.use('/vendor', express.static('node_modules'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

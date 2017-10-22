@@ -4,7 +4,7 @@ var db = require('./db');
 
 module.exports.requireLogin = function (req, res, next) {
   // Todo: handle redirect to previous URL
-  if(!req.user) {
+  if (!req.user) {
     return res.redirect('/users/login')
   }
   return next();
@@ -12,12 +12,14 @@ module.exports.requireLogin = function (req, res, next) {
 
 // Login Strategy
 var localLoginStrategy = new LocalStrategy(
-    function(username, password, done) {
+    function (username, password, done) {
       var query = 'SELECT * FROM `' + db.USER_DB + '` WHERE `username` = "' + username + '";';
       console.log(query);
       db._db.get(query, {}, function (err, row) {
         // Return if Error
-        if (err) { return done(err); }
+        if (err) {
+          return done(err);
+        }
 
         // Check if user was found
         if (!row || !row.password) {
@@ -39,7 +41,7 @@ var localLoginStrategy = new LocalStrategy(
 
 // Registration Strategy
 var localRegisterStrategy = new LocalStrategy(
-    function(username, password, done) {
+    function (username, password, done) {
       console.log('register user:', username, password)
       // todo
       // function findOrCreateUser(){
@@ -87,10 +89,10 @@ var localRegisterStrategy = new LocalStrategy(
 Passport.use('local.login', localLoginStrategy);
 Passport.use('local.register', localRegisterStrategy);
 
-Passport.serializeUser(function(user, done) {
+Passport.serializeUser(function (user, done) {
   done(null, user);
 });
-Passport.deserializeUser(function(user, done) {
+Passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 

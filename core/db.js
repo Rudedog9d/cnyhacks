@@ -1,6 +1,6 @@
 var config = require('../config');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(config.ProjectName.replace(/ /g,'') + '.db');
+var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
 // var Database = require('better-sqlite3');
 // var db = new Database('../ColdStoneMemery.db');
 
@@ -19,12 +19,12 @@ function createTable(name, fields, upsert) {
   var _field_str = "";
   var i = 0;
 
-  for(var field in fields) {
+  for (var field in fields) {
     var type = fields[field];
     _field_str += '`' + field + '`' + (type ? ' ' + type : '');
 
     // Add comma to string if not yet at end
-    if(i + 1 !== len) {
+    if (i + 1 !== len) {
       _field_str += ', '
     }
 
@@ -40,7 +40,7 @@ function createTable(name, fields, upsert) {
 }
 
 // Init DB
-db.serialize(function() {
+db.serialize(function () {
   createTable(PRODUCTS_DB, {
     info: 'TEXT',
     cost: 'INTEGER',

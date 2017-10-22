@@ -9,19 +9,19 @@
 
 
 {% block content %}
-  <h1>Welcome to the {{ ProjectName }} Store! </h1>
-  <p>We have memes. We have the best memes.</p>
+<h1>Welcome to the {{ ProjectName }} Store! </h1>
+<p>We have memes. We have the best memes.</p>
 
-  <store-list></store-list>
+<store-list></store-list>
 
 {% endblock %}
 
 {% block footer %}
 
-  <script>
-    $(document).ready(function () {
-        riot.mount('*')
-    });
-  </script>
+<script>
+  $(document).ready(function () {
+    riot.mount('*')
+  });
+</script>
 
 {% endblock footer %}
