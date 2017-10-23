@@ -1,8 +1,10 @@
 <store-list>
 
-  <div class="row">
-    <item-card each="{ item in items }" item="{ item }"></item-card>
+  <div id="item-container" class="row">
+    <item-card ref="items" each="{ item in items }" item="{ item }"></item-card>
   </div>
+
+  <item-modal ref="modal"></item-modal>
 
   <script>
     var tag = this;
@@ -49,6 +51,27 @@
         description: 'Buzzzzzzzz',
         owned: false
       }
-    ]
+    ];
+
+    tag.showItem = function (item) {
+      tag.refs.modal.update({item: item});
+      tag.refs.modal.open();
+    };
+
+    tag.on('mount', function () {
+      console.log('store-list mounted!');
+      tag.refs.items.forEach(function(item){
+        item.on('purchase', function(e){
+          console.log(e);
+          tag.showItem(e)
+        });
+
+        item.on('view', function(e){
+          console.log(e);
+          tag.showItem(e)
+        });
+      });
+    });
+
   </script>
 </store-list>
