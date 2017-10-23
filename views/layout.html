@@ -1,47 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    {% block head %}
-    <title>{{ title }}</title>
+  <!-- Vendor Stylesheets -->
+  <link rel="stylesheet" href="/vendor/materialize-css/dist/css/materialize.min.css">
 
-    <!-- Vendor Stylesheets -->
-    <link rel="stylesheet" href="/vendor/materialize-css/dist/css/materialize.min.css">
+  <!-- Vendor Javascript -->
+  <script src="/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="/vendor/materialize-css/dist/js/materialize.min.js"></script>
+  <script src="/vendor/riot/riot+compiler.min.js"></script>
 
-    <!-- Vendor Javascript -->
-    <script src="/vendor/jquery/dist/jquery.min.js"></script>
-    <script src="/vendor/materialize-css/dist/js/materialize.min.js"></script>
-    <script src="/vendor/riot/riot+compiler.min.js"></script>
+  <!-- Custom Stylesheets -->
+  <link rel='stylesheet' href='/css/style.css'/>
+  <link rel='stylesheet' href='/css/woahwhatisthis.css'/>
 
-    <!-- Custom Stylesheets -->
-    <link rel='stylesheet' href='/css/style.css' />
-    <link rel='stylesheet' href='/css/woahwhatisthis.css' />
-    {% endblock head %}
+  {% block head %}
+  <title>{{ title }}</title>
+  {% endblock head %}
 </head>
 <body>
 
 {% block nav %}
 <nav class="green darken-3">
-    <div class="nav-wrapper content-center">
-        <a href="/" class="brand-logo">{{ ProjectName }}</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/store/golden">Golden Store</a></li>
-            <li><a href="#">Components</a></li>
-            <li><a href="#">JavaScript</a></li>
-        </ul>
-    </div>
+  <div class="nav-wrapper content-center">
+    <a href="/" class="brand-logo">{{ ProjectName }}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/store">Store</a></li>
+      <li><a href="/store/golden">Golden Store</a></li>
+      {% if user and user.username %}
+      <li><a href="/users/{{user.username}}">Account</a></li>
+      <li><a href="/users/logout" class="btn">Logout</a></li>
+      {% else %}
+      <li><a href="/users/login" class="btn">Login</a></li>
+      {% endif %}
+    </ul>
+  </div>
 </nav>
 {% endblock nav %}
 
 <div id="app" class="content-center">
-    {% block content %}
-    Hello, world
-    {% endblock content %}
+  {% block content %}
+  Hello, world
+  {% endblock content %}
 </div>
 </body>
 
 <footer>
-    {% block footer %}
-    {% endblock footer %}
+  {% block footer %}
+  {% endblock footer %}
 </footer>
 
 </html>

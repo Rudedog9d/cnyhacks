@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<title>Login - {{ ProjectName }}</title>
+
+{% endblock head %}
+
+
+{% block content %}
+
+<h1>Login</h1>
+
+{% if error and error.length %}
+<ul class="collection">
+  <li id="error" class="collection-item red lighten-1">{{ error }}</li>
+</ul>
+{% endif %}
+
+<form action="/users/login" method="post">
+  <input name="username" placeholder="Username" type="text" required autofocus>
+  <input name="password" placeholder="password" type="password" required>
+  <button class="btn btn-flat" type="submit">Submit</button>
+</form>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+  $(document).ready(function () {
+//    riot.mount('*')
+  });
+</script>
+
+{% endblock footer %}
