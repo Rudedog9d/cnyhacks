@@ -1,21 +1,35 @@
 <item-modal>
   <!-- Modal Structure -->
-  <div id="_item_modal" class="modal modal-fixed-footer">
+  <div id="_item_modal" class="modal modal-fixed-footer" style="height: 80%">
     <div class="modal-content">
       <h4>{item.title}</h4>
       <p>{item.description}</p>
+
+      <div class="divider" style="margin: 1rem"></div>
+
+      <img src="{getImage()}" style="width: 100%">
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      <a href="javascript:void(0)" class="modal-action modal-close waves-effect waves-green btn-flat"
+         if="{!item.owned}" onclick="{onPurchase}">
+        Confirm Purchase
+      </a>
+      <a href="javascript:void(0)" class="modal-action modal-close waves-effect waves-green btn-flat">
+        { item.owned ? 'Close' : 'Cancel' }
+      </a>
     </div>
   </div>
 
   <script>
     var tag = this;
-    item = opts.item || {};
+    tag.item = opts.item || {};
 
     tag.modal = function (v) {
       $('#_item_modal').modal(v)
+    };
+
+    tag.onPurchase = function () {
+      tag.trigger('purchase', tag.item)
     };
 
     tag.open = function () {
@@ -24,6 +38,13 @@
 
     tag.close = function () {
       tag.modal('close');
+    };
+
+    tag.getImage = function () {
+      if(!tag.item) {
+        return ''
+      }
+      return tag.item.owned ? tag.item.img : WebStore.getPriceImageUrl(tag.item.price);
     };
 
     tag.on('mount', function () {

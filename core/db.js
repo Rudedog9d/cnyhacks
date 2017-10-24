@@ -6,6 +6,8 @@ var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
 
 const USER_DB = 'users';
 const PRODUCTS_DB = 'products';
+const USER_PROD_DB = USER_DB + '_' + PRODUCTS_DB;
+module.exports.db = {};
 
 /**
  * Create a table `name` in database with `fields`.
@@ -39,22 +41,55 @@ function createTable(name, fields, upsert) {
   // })
 }
 
+module.exports.db.run = function (q, cb) {
+  _db.run(q, cb)
+};
+
+module.exports.db.get = function (q, cb) {
+  _db.get(q, cb)
+};
+
 // Init DB
 db.serialize(function () {
   createTable(PRODUCTS_DB, {
-    info: 'TEXT',
-    cost: 'INTEGER',
-    author: 'TEXT'
+    info:   'TEXT',
+    cost:   'INTEGER',
+    author: 'TEXT',
+    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
   createTable(USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
-    credits: 'INTEGER',
-    bio: 'TEXT',
-    avatar: 'TEXT'
+    credits:  'INTEGER',
+    bio:      'TEXT',
+    avatar:   'TEXT',
+    id:       'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
+
+  // createTable(USER_PROD_DB, {
+  //   user_id: 'INTEGER',
+  //   product_id: 'INTEGER'
+  // }, true);
+
+  db.run('CREATE TABLE IF NOT EXISTS ' + USER_PROD_DB + '(' +
+      'user_id    INTEGER, ' +
+      'product_id INTEGER, ' +
+      'id         INTEGER PRIMARY KEY, ' + // Map ROWID to id
+      'FOREIGN KEY(user_id) REFERENCES ' + USER_DB + '(id),' +
+      'FOREIGN KEY(product_id) REFERENCES ' + PRODUCTS_DB + '(id)' +
+    ');'
+  )
+
 });
+
+module.exports.getProduct = function (product_id, user, done) {
+  var q = 'SELECT * FROM ' + PRODUCTS_DB +
+      ' INNER JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' +
+      ' WHERE `id` == ' + product_id;
+  console.log(q);
+  db.get(q, console.log)
+};
 
 module.exports._db = db;
 module.exports.USER_DB = USER_DB;

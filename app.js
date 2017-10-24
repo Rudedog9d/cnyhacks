@@ -55,11 +55,16 @@ app.use(function (req, res, next) {
   return next();
 });
 
+/* UNAUTHENTICATED ROUTES */
+app.use('/vendor', express.static('node_modules'));
 app.use('/', index);
 app.use('/users', users);
+
+app.use(auth.requireLogin);
+
+/* AUTHENTICATED ROUTES ONLY */
 app.use('/store', store);
 app.use('/adminsonly', admin);
-app.use('/vendor', express.static('node_modules'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

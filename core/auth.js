@@ -13,7 +13,7 @@ module.exports.requireLogin = function (req, res, next) {
 // Login Strategy
 var localLoginStrategy = new LocalStrategy(
     function (username, password, done) {
-      var query = 'SELECT * FROM `' + db.USER_DB + '` WHERE `username` = "' + username + '";';
+      var query = 'SELECT `_rowid_` as id,* FROM `' + db.USER_DB + '` WHERE `username` = "' + username + '";';
       console.log(query);
       db._db.get(query, {}, function (err, row) {
         // Return if Error
