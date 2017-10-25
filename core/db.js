@@ -75,54 +75,51 @@ db.serialize(function () {
   db.run('CREATE TABLE IF NOT EXISTS ' + USER_PROD_DB + '(' +
       'user_id    INTEGER, ' +
       'product_id INTEGER, ' +
-      'id         INTEGER PRIMARY KEY, ' + // Map ROWID to id
+      'owned      INTEGER, ' +
+      // 'id         INTEGER PRIMARY KEY, ' + // Map ROWID to id
       'FOREIGN KEY(user_id) REFERENCES ' + USER_DB + '(id),' +
       'FOREIGN KEY(product_id) REFERENCES ' + PRODUCTS_DB + '(id)' +
-    ');'
-  )
+      ');'
+  );
 
 });
-module.exports.getAllProducts = function () {
-
-}
-
 module.exports.getProduct = function (product_id, user, done) {
-  /*
+  return module.exports.getAllProducts(user, {product_id: product_id}, done)
+};
+
+module.exports.getAllProducts = function (user, filter, done) {
+  if(typeof filter === 'function') {
+    // Filter is actually CB - How do the JS libraries do it?
+    done = filter;
+  }
+
+  // Build Query
   var q = 'SELECT * FROM ' + PRODUCTS_DB +
-      ' INNER JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' +
-      ' WHERE `id` == ' + product_id;
-  */
-  var q = 'SELECT * FROM ' + PRODUCTS_DB + ' WHERE `id` == ' + product_id;
+      ' LEFT JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' + ' WHERE ';
+
+  // Add Filters
+  for (var f in filter) {
+    var val = filter[f];
+    q += '`' + f + '` = ' + val + ' AND ';
+  }
+
+  // Add filter for current user
+  q += ' (`user_id` == ' + user.id + ' OR `user_id` IS NULL)';
+  q += ';'; // End Query
+
   console.log(q);
-  db.get(q, function (err, row) {
-    if(err || !row) {
-      return done(err || 'Product not found');
-    }
 
-    var product = row;
-    if(!user) {
-      return done(null, product);
-    }
+  db.all(q,
+    // Callback for each row
+    function(err, rows) {
+      // Get info on whether user owns the item
+      if(err){ return done(err) }
 
-    // Get info on whether user owns the item
-    product.owned = false;
-
-    var q = 'SELECT * FROM ' + USER_PROD_DB +
-        ' WHERE `user_id` = ' + user.id +
-        ' AND `product_id` = ' + product_id;
-    console.log(q);
-
-    db.get(q, function (err, row) {
-      if(err) {
-        return done(err);
+      for(var row in rows) {
+        console.log(row.id, ':', !!row.owned)
       }
 
-      if(row) {
-        product.owned = true;
-      }
-
-      return done(null, product);
-    });
+      return done(null, rows)
   });
 };
 
