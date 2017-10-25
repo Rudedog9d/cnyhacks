@@ -51,6 +51,7 @@ db.serialize(function () {
     username: 'TEXT',
     password: 'TEXT',
     credits: 'INTEGER',
+    goldencredits: 'INTEGER',
     bio: 'TEXT',
     avatar: 'TEXT'
   }, true);

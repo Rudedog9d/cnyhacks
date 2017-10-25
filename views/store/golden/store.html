@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+<script type="riot/tag" src="/tags/golden-item.tag.html"></script>
+<script type="riot/tag" src="/tags/item-card.tag.html"></script>
+
+{% endblock head %}
+
+
+{% block content %}
+  <div id="title" class="headers">
+    <h2>
+      Golden Store Items for Sale
+    </h2>
+    <p class="flow-text">
+      Use Golden Credits to earn awesome prizes!
+    </p>
+
+
+   <!-- <a class="waves-effect waves-light btn">Buy the thing</a> -->
+  </div>
+
+
+  <ul class="collection">
+    <li class="collection-item avatar">
+      <img src="/images/flag.jpeg" alt="" class="circle">
+      <span class="flow-text">Flag.txt</span>
+      <p>Description: A flag, nimbus! <br>
+        Golden Credits needed: 20
+      </p>
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Buy</a>
+    </li>
+
+    <li class="collection-item avatar">
+      <img src="/images/challenge1.jpeg" alt="" class="circle">
+      <span class="flow-text">Challenge 1 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 1
+      </p>
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal2">Buy</a>
+    </li>
+
+    <li class="collection-item avatar">
+      <img src="/images/challenge2.png" alt="" class="circle">
+      <span class="flow-text">Challenge 2 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 2
+      </p>
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal3">Buy</a>
+    </li>
+
+    <li class="collection-item avatar">
+      <i class="material-icons circle red">play_arrow</i>
+      <span class="flow-text">Challenge 3 Hint</span>
+      <p>Description: Hint for doing blah blah <br>
+        Golden Credits needed: 2
+      </p>
+      <!-- <a href="#!" class="secondary-content"><i class="material-icons">Buy</i></a> -->
+      <a class="waves-effect waves-light btn modal-trigger" href="#modal4">Buy</a>
+    </li>
+
+    <!-- Modal Trigger -->
+    <!-- <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a> -->
+    <!--<button data-target="modal1" class="btn modal-trigger">Modal</button>-->
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h4>Purchase flag.txt</h4>
+        <p>Only 20 Golden Credits!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>
+      </div>
+    </div>
+
+    <div id="modal2" class="modal">
+      <div class="modal-content">
+        <h4>Challenge 1 Hint</h4>
+        <p>Only 1 Golden Credit!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>
+      </div>
+    </div>
+
+    <div id="modal3" class="modal">
+      <div class="modal-content">
+        <h4>Challenge 2 Hint</h4>
+        <p>Only 2 Golden Credits!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>
+      </div>
+    </div>
+
+    <div id="modal4" class="modal">
+      <div class="modal-content">
+        <h4>Challenge 3 Hint</h4>
+        <p>Only 2 Golden Credits!</p>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>
+      </div>
+    </div>
+
+  </ul>
+
+
+
+<!-- <golden-store-list></golden-store-list> -->
+
+{% endblock %}
+
+{% block footer %}
+
+  <script>
+    function onPurchase() {
+      console.log('purchase!');
+    }
+
+    $(document).ready(function () {
+        riot.mount('*')
+        $('.modal').modal();
+    });
+  </script>
+
+{% endblock footer %}
