@@ -82,13 +82,48 @@ db.serialize(function () {
   )
 
 });
+module.exports.getAllProducts = function () {
+
+}
 
 module.exports.getProduct = function (product_id, user, done) {
+  /*
   var q = 'SELECT * FROM ' + PRODUCTS_DB +
       ' INNER JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' +
       ' WHERE `id` == ' + product_id;
+  */
+  var q = 'SELECT * FROM ' + PRODUCTS_DB + ' WHERE `id` == ' + product_id;
   console.log(q);
-  db.get(q, console.log)
+  db.get(q, function (err, row) {
+    if(err || !row) {
+      return done(err || 'Product not found');
+    }
+
+    var product = row;
+    if(!user) {
+      return done(null, product);
+    }
+
+    // Get info on whether user owns the item
+    product.owned = false;
+
+    var q = 'SELECT * FROM ' + USER_PROD_DB +
+        ' WHERE `user_id` = ' + user.id +
+        ' AND `product_id` = ' + product_id;
+    console.log(q);
+
+    db.get(q, function (err, row) {
+      if(err) {
+        return done(err);
+      }
+
+      if(row) {
+        product.owned = true;
+      }
+
+      return done(null, product);
+    });
+  });
 };
 
 module.exports._db = db;

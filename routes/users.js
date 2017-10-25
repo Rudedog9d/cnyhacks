@@ -67,6 +67,9 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
           }
 
           // Redirect to user homepage on successful login
+          if(req.query.url){
+            return res.redirect(req.query.url)
+          }
           return res.redirect('/users/' + user.username)
         })
       })(req, res) // Be sure to CALL the damn function that is returned

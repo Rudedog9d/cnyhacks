@@ -8,11 +8,33 @@ router.get('/', function (req, res, next) {
 });
 
 /* POST purchase an item. */
+router.get('/items/:id', function (req, res, next) {
+  console.log(req.user);
+  // Ensure user table exists
+
+  db.getProduct(req.params.id, req.user, function (err, product) {
+    console.log(err, product);
+    if(err) {
+      return done(err);
+    }
+
+    return res.send(product);
+  })
+});
+
+/* POST purchase an item. */
 router.post('/items/:id/purchase', function (req, res, next) {
   console.log(req.user);
   // Ensure user table exists
 
-  db.getProduct(req.params.id)
+  db.getProduct(req.params.id, req.user, function (err, product) {
+    console.log(err, product);
+    if(err) {
+      return done(err);
+    }
+
+    return res.send(product);
+  })
 });
 
 module.exports = router;

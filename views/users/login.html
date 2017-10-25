@@ -17,7 +17,7 @@
 </ul>
 {% endif %}
 
-<form action="{{ '/users/register' if register else '/users/login' }}" method="post">
+<form method="post">
   <input name="username" placeholder="Username" type="text" required autofocus>
   <input name="password" placeholder="password" type="password" required>
   <button class="btn btn-flat" type="submit">{{ 'Register' if register else 'Login' }}</button>

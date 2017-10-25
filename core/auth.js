@@ -5,7 +5,7 @@ var db = require('./db');
 module.exports.requireLogin = function (req, res, next) {
   // Todo: handle redirect to previous URL
   if (!req.user) {
-    return res.redirect('/users/login')
+    return res.redirect('/users/login?url=' + encodeURIComponent(req.originalUrl))
   }
   return next();
 };
