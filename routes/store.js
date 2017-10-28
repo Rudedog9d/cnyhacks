@@ -3,8 +3,13 @@ var router = express.Router();
 var db = require('../core/db');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('store.html');
+router.get('/', function(req, res, next) {
+    res.render('store/store.html');
+});
+
+/* GET home page. */
+router.get('/golden', function(req, res, next) {
+    res.render('store/golden/store.html');
 });
 
 /* GET all golden items. */

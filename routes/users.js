@@ -40,7 +40,7 @@ router.post('/register', /* UNAUTHENTICATED ROUTE */
       }
 
       req.login(user,null, function() {
-        req.redirect('/users/' + user.username)
+        res.redirect('/users/' + user.username)
       })
     })(req, res);
 });
