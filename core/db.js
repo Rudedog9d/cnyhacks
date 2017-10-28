@@ -67,11 +67,6 @@ db.serialize(function () {
     id:       'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
-  // createTable(USER_PROD_DB, {
-  //   user_id: 'INTEGER',
-  //   product_id: 'INTEGER'
-  // }, true);
-
   db.run('CREATE TABLE IF NOT EXISTS ' + USER_PROD_DB + '(' +
       'user_id    INTEGER, ' +
       'product_id INTEGER, ' +
@@ -109,18 +104,27 @@ module.exports.getAllProducts = function (user, filter, done) {
 
   console.log(q);
 
-  db.all(q,
-    // Callback for each row
-    function(err, rows) {
-      // Get info on whether user owns the item
+  ret = [];
+
+  // Get all product Entries
+  db.each(q,
+    // Each row Callback
+    function(err, row) {
       if(err){ return done(err) }
 
-      for(var row in rows) {
-        console.log(row.id, ':', !!row.owned)
-      }
-
-      return done(null, rows)
-  });
+      // Todo: make this not static and sucky
+      ret.push({
+        id: row.id,
+        info: row.info,
+        author: row.author,
+        owned: !!row.owned,
+        cost: row.cost
+      });
+    },
+    // Complete callback
+    function (err, numRows) {
+      return done(null, ret)
+    });
 };
 
 module.exports._db = db;
