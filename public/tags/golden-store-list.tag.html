@@ -1,30 +1,18 @@
 <golden-store-list>
 
     <div class="row">
-        <!--<item-card each="{ item in items }" item="{ item }"></item-card>-->
-        <!--<span each="{ items }">{ name }</span>-->
       <ul class="collection">
-        <li class="collection-item avatar" each="{items}" >
+        <p class="collection-item avatar" each="{items}" >
           <img src="{imgScr}" alt="" class="circle">
           <span class="flow-text">{name}</span>
-          <p>Description: {description} <br>
-            Golden Credits needed: {cost}
+          <p>Description: {description} </p>>
+          <p>Golden Credits needed: {cost}</p>
           </p>
           <a class="waves-effect waves-light btn { 'disabled' : cost > WebStore.user.golden_credits }" onclick="{onItemPurchase}" href="javascript:void(0)">Buy</a>
         </li>
       </ul>
     </div>
     <item-golden-modal ref="modal"></item-golden-modal>
-  <!--<div id="modal" class="modal">-->
-  <!--<div class="modal-content">-->
-    <!--<h4>Purchase flag.txt</h4>-->
-    <!--<p>Only 20 Golden Credits!</p>-->
-  <!--</div>-->
-  <!--<div class="modal-footer">-->
-    <!--<a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>-->
-  <!--</div>-->
-  <!--</div>-->
-
 
     <script>
         var tag = this;
