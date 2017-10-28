@@ -6,6 +6,7 @@ var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
 
 const USER_DB = 'users';
 const PRODUCTS_DB = 'products';
+const PRODUCTS_GOLDEN_DB = 'golden_products';
 const USER_PROD_DB = USER_DB + '_' + PRODUCTS_DB;
 module.exports.db = {};
 
@@ -58,11 +59,20 @@ db.serialize(function () {
     id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
+  createTable(PRODUCTS_GOLDEN_DB, {
+    name:   'TEXT',
+    cost:   'INTEGER',
+    description: 'TEXT',
+    content: 'TEXT',
+    imgScr: 'TEXT',
+    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
+  }, true);
+
   createTable(USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
     credits:  'INTEGER',
-    goldencredits: 'INTEGER',
+    golden_credits: 'INTEGER',
     bio:      'TEXT',
     avatar:   'TEXT',
     id:       'INTEGER PRIMARY KEY'  // Map ROWID to id
@@ -125,6 +135,42 @@ module.exports.getAllProducts = function (user, filter, done) {
     // Complete callback
     function (err, numRows) {
       return done(null, ret)
+    });
+};
+
+//above is regular product ***
+
+module.exports.getGoldenProduct = function (product_id, user, done) {
+  return module.exports.getAllGoldenProducts(user, {product_id: product_id}, done)
+};
+
+module.exports.getAllGoldenProducts = function (user, filter, done) {
+  if(typeof filter === 'function') {
+    // Filter is actually CB - How do the JS libraries do it?
+    done = filter;
+  }
+
+  // Build Query
+  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB +
+    (filter.length ? ' WHERE' : '' );
+
+  // Add Filters
+  for (var f in filter) {
+    var val = filter[f];
+    q += '`' + f + '` = ' + val + ' AND ';
+  }
+
+
+  q += ';'; // End Query
+
+  console.log(q);
+
+  // Get all product Entries
+  db.all(q,
+
+    // Complete callback
+    function (err, rows) {
+      return done(null, rows)
     });
 };
 

@@ -12,7 +12,26 @@ router.get('/golden', function(req, res, next) {
     res.render('store/golden/store.html');
 });
 
+/* GET all golden items. */
+router.get('/golden/items', function (req, res, next) {
+  db.getAllGoldenProducts(req.user, {}, function (err, product) {
+    if(err) { return next(err); }
+
+    return res.send(product);
+  })
+});
+
+/* GET a golden item. */
+router.get('/golden/items/:id', function (req, res, next) {
+  db.getGoldenProduct(req.params.id, req.user, function (err, product) {
+    console.log(err, product);
+    if(err) { return next(err); }
+
+    return res.send(product);
+  });
+});
 /* GET all items. */
+
 router.get('/items', function (req, res, next) {
   db.getAllProducts(req.user, {}, function (err, product) {
     if(err) { return next(err); }

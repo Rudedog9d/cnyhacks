@@ -1,26 +1,50 @@
 <golden-store-list>
 
     <div class="row">
-        <item-card each="{ item in items }" item="{ item }"></item-card>
+        <!--<item-card each="{ item in items }" item="{ item }"></item-card>-->
+        <!--<span each="{ items }">{ name }</span>-->
+      <ul class="collection">
+        <li class="collection-item avatar" each="{items}" >
+          <img src="{imgScr}" alt="" class="circle">
+          <span class="flow-text">{name}</span>
+          <p>Description: {description} <br>
+            Golden Credits needed: {cost}
+          </p>
+          <a class="waves-effect waves-light btn { 'disabled' : cost > WebStore.user.golden_credits }" onclick="{onItemPurchase}" href="javascript:void(0)">Buy</a>
+        </li>
+      </ul>
     </div>
+    <item-golden-modal ref="modal"></item-golden-modal>
+  <!--<div id="modal" class="modal">-->
+  <!--<div class="modal-content">-->
+    <!--<h4>Purchase flag.txt</h4>-->
+    <!--<p>Only 20 Golden Credits!</p>-->
+  <!--</div>-->
+  <!--<div class="modal-footer">-->
+    <!--<a href="#!" onclick="onPurchase()" class="modal-action modal-close waves-effect waves-green btn-flat">Confirm Purchase</a>-->
+  <!--</div>-->
+  <!--</div>-->
+
 
     <script>
         var tag = this;
-        tag.items = [
-            {
-                title: 'Equifax',
-                price: 100,
-                img: '/images/equifax.jpg',
-                description: 'Meme reguarding the recent Equifax Breach',
-                owned: true
-            },
-            {
-                title: 'Bees',
-                price: 100,
-                img: '/images/memes/bees.jpg',
-                description: 'Buzzzzzzzz',
-                owned: false
+        tag.items = [];
+
+        tag.onItemPurchase = function (e) {
+          console.log(e);
+          tag.refs.modal.update({item: e.item});
+          tag.refs.modal.open()
+        };
+
+        tag.on('mount', function () {
+          $.ajax({
+            url: '/store/golden/items',
+            success: function (data) {
+              tag.items = data;
+              tag.update();
+              console.log(data)
             }
-        ]
+          })
+        })
     </script>
 </golden-store-list>
