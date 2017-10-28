@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+<script type="riot/tag" src="/tags/golden-item.tag.html"></script>
+<script type="riot/tag" src="/tags/golden-store-list.tag.html"></script>
+<script type="riot/tag" src="/tags/item-card.tag.html"></script>
+<script type="riot/tag" src="/tags/item-golden-modal.tag.html"></script>
+
+{% endblock head %}
+
+
+{% block content %}
+  <div id="title" class="headers">
+    <h2>
+      Golden Store Items for Sale
+    </h2>
+    <p class="flow-text">
+      Use Golden Credits to earn awesome prizes!
+    </p>
+
+
+  </div>
+  <golden-store-list></golden-store-list>
+
+{% endblock %}
+
+{% block footer %}
+
+  <script>
+    $(document).ready(function () {
+        riot.mount('*')
+        $('.modal').modal();
+    });
+  </script>
+
+{% endblock footer %}

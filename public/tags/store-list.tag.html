@@ -1,8 +1,10 @@
 <store-list>
 
-  <div class="row">
-    <item-card each="{ item in items }" item="{ item }"></item-card>
+  <div id="item-container" class="row">
+    <item-card ref="items" each="{ item in items }" item="{ item }"></item-card>
   </div>
+
+  <item-modal ref="modal"></item-modal>
 
   <script>
     var tag = this;
@@ -10,7 +12,22 @@
       {
         title: 'Equifax',
         price: 100,
-        img: '/images/equifax.jpg',
+        img: '/images/memes/equifax.png',
+        description: 'Meme reguarding the recent Equifax Breach',
+        owned: true
+      },
+      {
+        title: 'Bees',
+        price: 100,
+        id: 1,
+        img: '/images/memes/bees.jpg',
+        description: 'Buzzzzzzzz',
+        owned: false
+      },
+      {
+        title: 'Equifax',
+        price: 100,
+        img: '/images/memes/equifax.png',
         description: 'Meme reguarding the recent Equifax Breach',
         owned: true
       },
@@ -24,21 +41,7 @@
       {
         title: 'Equifax',
         price: 100,
-        img: '/images/equifax.jpg',
-        description: 'Meme reguarding the recent Equifax Breach',
-        owned: true
-      },
-      {
-        title: 'Bees',
-        price: 100,
-        img: '/images/memes/bees.jpg',
-        description: 'Buzzzzzzzz',
-        owned: false
-      },
-      {
-        title: 'Equifax',
-        price: 100,
-        img: '/images/equifax.jpg',
+        img: '/images/memes/equifax.png',
         description: 'Meme reguarding the recent Equifax Breach',
         owned: true
       },
@@ -49,6 +52,24 @@
         description: 'Buzzzzzzzz',
         owned: false
       }
-    ]
+    ];
+
+    tag.showItem = function (item) {
+      tag.refs.modal.update({item: item});
+      tag.refs.modal.open();
+    };
+
+    tag.on('mount', function () {
+      console.log('store-list mounted!');
+      tag.refs.items.forEach(function(item){
+        item.on('purchase', tag.showItem);
+        item.on('view', tag.showItem);
+      });
+
+      tag.refs.modal.on('purchase', function (e) {
+        WebStore.purchaseItem(e.id)
+      });
+    });
+
   </script>
 </store-list>

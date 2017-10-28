@@ -8,6 +8,7 @@
   <script src="/vendor/jquery/dist/jquery.min.js"></script>
   <script src="/vendor/materialize-css/dist/js/materialize.min.js"></script>
   <script src="/vendor/riot/riot+compiler.min.js"></script>
+  <script src="/js/webstore.js"></script>
 
   <!-- Custom Stylesheets -->
   <link rel='stylesheet' href='/css/style.css'/>
@@ -25,6 +26,7 @@
     <a href="/" class="brand-logo">{{ ProjectName }}</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/store">Store</a></li>
+      <li><a href="/store/golden">Golden Store</a></li>
       {% if user and user.username %}
       <li><a href="/users/{{user.username}}">Account</a></li>
       <li><a href="/users/logout" class="btn">Logout</a></li>
@@ -46,6 +48,15 @@
 <footer>
   {% block footer %}
   {% endblock footer %}
+  <script>
+    WebStore.user = {
+      username: '{{user.username}}',
+      credits: parseInt('{{user.credits}}'),
+      bio: '{{user.bio}}',
+      id: '{{user.id}}',
+      golden_credits: parseInt('{{user.golden_credits}}')
+    }
+  </script>
 </footer>
 
 </html>

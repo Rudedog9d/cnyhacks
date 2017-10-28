@@ -14,7 +14,35 @@ router.get('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
   if (req.user) {
     return res.redirect('/users/' + req.user.username)
   }
-  return res.render('users/login.html', {error: req.flash('error')});
+  return res.render('users/login.html', {register: false, error: req.flash('error')});
+});
+
+router.get('/register', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
+  if (req.user) {
+    return res.redirect('/users/' + req.user.username)
+  }
+  return res.render('users/login.html', {register: true, error: req.flash('error')});
+});
+
+router.post('/register', /* UNAUTHENTICATED ROUTE */
+  function (req, res, next) {
+    passport.authenticate('local.register', {
+      failureFlash: 'user already exists'
+    }, function (err, user) {
+
+      if(err) {
+        console.error(err);
+        res.statusCode = 500;
+      }
+
+      if(!user) {
+        return res.render('users/login.html', {register: true, error: 'Username already exists'});
+      }
+
+      req.login(user,null, function() {
+        res.redirect('/users/' + user.username)
+      })
+    })(req, res);
 });
 
 /* POST Login Info */
@@ -41,6 +69,9 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
           }
 
           // Redirect to user homepage on successful login
+          if(req.query.url){
+            return res.redirect(req.query.url)
+          }
           return res.redirect('/users/' + user.username)
         })
       })(req, res) // Be sure to CALL the damn function that is returned

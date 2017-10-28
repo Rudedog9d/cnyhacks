@@ -6,6 +6,9 @@ var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
 
 const USER_DB = 'users';
 const PRODUCTS_DB = 'products';
+const PRODUCTS_GOLDEN_DB = 'golden_products';
+const USER_PROD_DB = USER_DB + '_' + PRODUCTS_DB;
+module.exports.db = {};
 
 /**
  * Create a table `name` in database with `fields`.
@@ -39,22 +42,137 @@ function createTable(name, fields, upsert) {
   // })
 }
 
+module.exports.db.run = function (q, cb) {
+  _db.run(q, cb)
+};
+
+module.exports.db.get = function (q, cb) {
+  _db.get(q, cb)
+};
+
 // Init DB
 db.serialize(function () {
   createTable(PRODUCTS_DB, {
-    info: 'TEXT',
-    cost: 'INTEGER',
-    author: 'TEXT'
+    info:   'TEXT',
+    cost:   'INTEGER',
+    author: 'TEXT',
+    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
+  }, true);
+
+  createTable(PRODUCTS_GOLDEN_DB, {
+    name:   'TEXT',
+    cost:   'INTEGER',
+    description: 'TEXT',
+    content: 'TEXT',
+    imgScr: 'TEXT',
+    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
   createTable(USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
-    credits: 'INTEGER',
-    bio: 'TEXT',
-    avatar: 'TEXT'
+    credits:  'INTEGER',
+    golden_credits: 'INTEGER',
+    bio:      'TEXT',
+    avatar:   'TEXT',
+    id:       'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
+
+  db.run('CREATE TABLE IF NOT EXISTS ' + USER_PROD_DB + '(' +
+      'user_id    INTEGER, ' +
+      'product_id INTEGER, ' +
+      'owned      INTEGER, ' +
+      // 'id         INTEGER PRIMARY KEY, ' + // Map ROWID to id
+      'FOREIGN KEY(user_id) REFERENCES ' + USER_DB + '(id),' +
+      'FOREIGN KEY(product_id) REFERENCES ' + PRODUCTS_DB + '(id)' +
+      ');'
+  );
+
 });
+module.exports.getProduct = function (product_id, user, done) {
+  return module.exports.getAllProducts(user, {product_id: product_id}, done)
+};
+
+module.exports.getAllProducts = function (user, filter, done) {
+  if(typeof filter === 'function') {
+    // Filter is actually CB - How do the JS libraries do it?
+    done = filter;
+  }
+
+  // Build Query
+  var q = 'SELECT * FROM ' + PRODUCTS_DB +
+      ' LEFT JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' + ' WHERE ';
+
+  // Add Filters
+  for (var f in filter) {
+    var val = filter[f];
+    q += '`' + f + '` = ' + val + ' AND ';
+  }
+
+  // Add filter for current user
+  q += ' (`user_id` == ' + user.id + ' OR `user_id` IS NULL)';
+  q += ';'; // End Query
+
+  console.log(q);
+
+  ret = [];
+
+  // Get all product Entries
+  db.each(q,
+    // Each row Callback
+    function(err, row) {
+      if(err){ return done(err) }
+
+      // Todo: make this not static and sucky
+      ret.push({
+        id: row.id,
+        info: row.info,
+        author: row.author,
+        owned: !!row.owned,
+        cost: row.cost
+      });
+    },
+    // Complete callback
+    function (err, numRows) {
+      return done(null, ret)
+    });
+};
+
+//above is regular product ***
+
+module.exports.getGoldenProduct = function (product_id, user, done) {
+  return module.exports.getAllGoldenProducts(user, {product_id: product_id}, done)
+};
+
+module.exports.getAllGoldenProducts = function (user, filter, done) {
+  if(typeof filter === 'function') {
+    // Filter is actually CB - How do the JS libraries do it?
+    done = filter;
+  }
+
+  // Build Query
+  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB +
+    (filter.length ? ' WHERE' : '' );
+
+  // Add Filters
+  for (var f in filter) {
+    var val = filter[f];
+    q += '`' + f + '` = ' + val + ' AND ';
+  }
+
+
+  q += ';'; // End Query
+
+  console.log(q);
+
+  // Get all product Entries
+  db.all(q,
+
+    // Complete callback
+    function (err, rows) {
+      return done(null, rows)
+    });
+};
 
 module.exports._db = db;
 module.exports.USER_DB = USER_DB;
