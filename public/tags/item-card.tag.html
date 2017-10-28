@@ -20,11 +20,11 @@
         tag.item = opts.item || {};
 
     tag.onPurchase = function () {
-      console.log('purchasing item!', tag.item)
+      tag.trigger('purchase', tag.item);
     };
 
     tag.onView = function () {
-      console.log('viewing item!', tag.item)
+      tag.trigger('view', tag.item);
     };
   </script>
 </item-card>
