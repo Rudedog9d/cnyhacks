@@ -1,17 +1,16 @@
 <item-card>
-  <div class="col s12 m4 l4">
-    <div class="card">
-      <div class="card-image">
-        <img src="{getImage()}">
-        <span class="card-title white black-text" style="opacity: 0.8; width: 100%">{ item.name }</span>
-      </div>
-      <div class="card-content">
-        <p>{ item.description }</p>
-      </div>
-      <div class="card-action">
-        <a class="{ item.owned ? 'hide' : '' }" onclick="{ onPurchase }" href="#">Purchase</a>
-        <a class="{ item.owned ? '' : 'hide' }" onclick="{ onView }" href="#">View</a>
-      </div>
+  <!-- Style tag needed when image is 404 -->
+  <div class="card" style="width: 100%">
+    <div class="card-image">
+      <img src="{getImage()}" onerror="this.onerror=null;this.src='/images/404.jpg';">
+      <span class="card-title white black-text">{ item.name } - <small>{ item.cost }CR</small></span>
+    </div>
+    <div class="card-content">
+      <p>{ item.description }</p>
+    </div>
+    <div class="card-action">
+      <a class="{ item.owned ? 'hide' : '' }" onclick="{ onPurchase }" href="#">Purchase</a>
+      <a class="{ item.owned ? '' : 'hide' }" onclick="{ onView }" href="#">View</a>
     </div>
   </div>
 

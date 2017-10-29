@@ -1,4 +1,5 @@
 var config = require('../config');
+var util = require('./util');
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
 // var Database = require('better-sqlite3');
@@ -99,22 +100,27 @@ module.exports.getAllProducts = function (user, filter, done) {
     done = filter;
   }
 
-  // Build Query
-  var q = 'SELECT * FROM ' + PRODUCTS_DB +
-      ' LEFT JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' + ' WHERE ';
+  // Build Query - Thanks @tbutts
+  var q = 'Select * from ' + PRODUCTS_DB +
+      ' LEFT JOIN (SELECT * FROM ' + USER_PROD_DB + ' where user_id = ' + user.id + ') AS up' +
+      ' on products.id = up.product_id';
 
-  // Add Filters
-  for (var f in filter) {
-    var val = filter[f];
-    q += '`' + f + '` = ' + val + ' AND ';
+  // If additional filters exist, add them to the query
+  if(util.objectKeys(filter).length) {
+    q += ' WHERE ';
+    // Add Filters
+    for (var f in filter) {
+      var val = filter[f];
+      q += '`' + f + '` = ' + val + ' AND ';
+    }
+
+    // Hack to remove final AND
+    q = q.substring(0, q.length - 4);
   }
 
-  // Add filter for current user
-  q += ' (`user_id` == ' + user.id + ' OR `user_id` IS NULL)';
+  // q += ' GROUP BY id;'; // End Query
   q += ';'; // End Query
-
-  console.log(q);
-
+  console.log(q);       // Log Query
   ret = [];
 
   // Get all product Entries
@@ -130,18 +136,25 @@ module.exports.getAllProducts = function (user, filter, done) {
           continue;
         obj[prop] = row[prop];
       }
+
       // Set owned to a Boolean value
-      obj.owned = !!obj.owned;
+      obj['owned'] = !!row.owned;
 
       // Add to return list
       ret.push(obj)
     },
     // Complete callback
     function (err, numRows) {
-      return done(null, ret)
+      return done(err, ret)
     });
 };
 
+/**
+ * Purchase a product. Updates the User's credits first, then updates DB with purchase on success
+ * @param user    User Object purchasing Item
+ * @param product Product Object to purchase [ from getProduct() ]
+ * @param done    Callback when operation is finished - will be called with params from db.run()
+ */
 module.exports.purchaseProduct = function (user, product, done) {
   module.exports.updateUserCredits(user, 0 - product.cost, function (err) {
     if(err) { return done ? done(err) : false }
@@ -153,19 +166,22 @@ module.exports.purchaseProduct = function (user, product, done) {
     db.get(q, function (err, row) {
       var q = '';
       if(row) {
-        // Update
+        // Update the existing entry (just in case)
         q = 'UPDATE ' + USER_PROD_DB +
             ' SET owned = 1' +
             ' WHERE `user_id` = ' + user.id +
             ' AND `product_id` = ' + product.id;
       } else {
+        // Insert new entry to DB representing a user owns that item
         q = 'INSERT INTO ' + USER_PROD_DB + '(user_id, product_id, owned)' +
             ' VALUES (' +
             user.id + ',' +     // user_id
             product.id + ',' +  // product_id
             '1' + ')'           // owned
       }
-      db.run(q, {}, done);
+
+      // Run the Update/Insert
+      db.run(q, [], done);
     });
   });
 };
@@ -182,8 +198,6 @@ module.exports.updateUserCredits = function (user, creditChange, done) {
       ' WHERE `id` = ' + user.id;
   db.run(q, {}, done)
 };
-// Close the DB, open for each request
-// db.close();
 
 module.exports._db = db;
 module.exports.USER_DB = USER_DB;

@@ -1,7 +1,8 @@
 <store-list>
-
   <div id="item-container" class="row">
-    <item-card ref="items" each="{ item in items }" item="{ item }"></item-card>
+    <div class="col-12 cards-container">
+      <item-card ref="items" each="{ item in items }" item="{ item }"></item-card>
+    </div>
   </div>
 
   <item-modal ref="modal"></item-modal>
