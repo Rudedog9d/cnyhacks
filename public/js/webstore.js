@@ -72,19 +72,32 @@ var WebStore;
     } // else if(price <= 000)
     return '/images/100.svg'
   };
-  
-  WebStore.purchaseItem = function (id) {
-    console.log('purchasing ID', id);
+
+  WebStore.getProducts = function (cb) {
     $.ajax({
-      url: '/store/items/' + id + '/purchase',
-      method: 'POST',
+      url: '/store/items/',
       success: function (data) {
-        console.log(data);
-        WebStore.success('Item purchased successfully!');
+        return cb(data);
       },
       error: function (err) {
         var msg = err.responseJSON.error || err.responseText || 'An Error has occurred';
         WebStore.error(msg, err)
+      }
+    });
+  };
+  
+  WebStore.purchaseItem = function (id, done) {
+    $.ajax({
+      url: '/store/items/' + id + '/purchase',
+      method: 'POST',
+      success: function (data) {
+        WebStore.success('Item purchased successfully!');
+        done(data);
+      },
+      error: function (err) {
+        var msg = err.responseJSON.error || err.responseText || 'An Error has occurred';
+        WebStore.error(msg, err);
+        done();
       }
     });
   };

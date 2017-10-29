@@ -28,7 +28,7 @@
       $('#_item_modal').modal(v)
     };
 
-    tag.onPurchase = function () {
+    tag.onPurchase = function (e) {
       tag.trigger('purchase', tag.item)
     };
 
@@ -44,7 +44,7 @@
       if(!tag.item) {
         return ''
       }
-      return tag.item.owned ? tag.item.img : WebStore.getPriceImageUrl(tag.item.price);
+      return tag.item.owned ? '/images/memes/' + tag.item.imgSrc : WebStore.getPriceImageUrl(tag.item.price);
     };
 
     tag.on('mount', function () {

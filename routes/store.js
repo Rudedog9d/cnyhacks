@@ -30,6 +30,11 @@ router.post('/items/:id/purchase', function (req, res, next) {
   db.getProduct(req.user, req.params.id, function (err, product) {
     if(err) { return next(err); }
 
+    if(!product) {
+      res.status(404);
+      return res.send({error: 'Product Not Found'});
+    }
+
     if(product.owned) {
       res.status(400);
       return res.send({error: 'already owned'});

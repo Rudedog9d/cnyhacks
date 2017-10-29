@@ -2,8 +2,8 @@
   <div class="col s12 m4 l4">
     <div class="card">
       <div class="card-image">
-        <img src="images/100.svg">
-        <span class="card-title white black-text" style="opacity: 0.8; width: 100%">{ item.title }</span>
+        <img src="{getImage()}">
+        <span class="card-title white black-text" style="opacity: 0.8; width: 100%">{ item.name }</span>
       </div>
       <div class="card-content">
         <p>{ item.description }</p>
@@ -17,7 +17,14 @@
 
   <script>
     var tag = this;
-    item = opts.item || {};
+    tag.item = opts.item || {};
+
+    tag.getImage = function () {
+      if(!tag.item) {
+        return ''
+      }
+      return tag.item.owned ? '/images/memes/' + tag.item.imgSrc : WebStore.getPriceImageUrl(tag.item.price);
+    };
 
     tag.onPurchase = function () {
       tag.trigger('purchase', tag.item);

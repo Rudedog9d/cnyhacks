@@ -53,6 +53,7 @@ module.exports.db.get = function (q, cb) {
 db.serialize(function () {
   createTable(PRODUCTS_DB, {
     name:   'TEXT',
+    imgSrc:   'TEXT',
     cost:   'INTEGER',
     description:  'TEXT',
     author: 'TEXT',
@@ -79,6 +80,12 @@ db.serialize(function () {
   );
 
 });
+
+module.exports.findUserById = function (user_id, done) {
+  var q = 'SELECT * FROM ' + USER_DB + ' WHERE id = ' + user_id + ';';
+  db.get(q, done)
+}
+
 module.exports.getProduct = function (user, product_id, done) {
   return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
     // Return first results
@@ -116,14 +123,18 @@ module.exports.getAllProducts = function (user, filter, done) {
     function(err, row) {
       if(err){ return done(err) }
 
-      // Todo: make this not static and sucky
-      ret.push({
-        id: row.id,
-        info: row.info,
-        author: row.author,
-        owned: !!row.owned,
-        cost: row.cost
-      });
+      var obj = {};
+      for(prop in row) {
+        // Skip invalid props (todo improve)
+        if(prop === 'product_id' || prop === 'user_id')
+          continue;
+        obj[prop] = row[prop];
+      }
+      // Set owned to a Boolean value
+      obj.owned = !!obj.owned;
+
+      // Add to return list
+      ret.push(obj)
     },
     // Complete callback
     function (err, numRows) {
