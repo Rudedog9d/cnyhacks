@@ -61,8 +61,6 @@ app.use('/sitemap.xml', express.static('public/sitemap.xml'));
 app.use('/vendor', express.static('node_modules'));
 app.use('/', index);
 app.use('/users', users);
-// app.use('/flagdirectory', function (req, res, next) {
-//  console.log(req.url)
 app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */

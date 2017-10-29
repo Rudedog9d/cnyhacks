@@ -2,10 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 
-/* GET avatar page. */
-
-
-/* GET flag.txt. */
+/* GET directory listing */
 function getDirs(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
     if (err){
@@ -22,12 +19,11 @@ router.get('/', function (req, res, next) {
   });
 });
 
-
+// cant nav to /avatars/flag.txt
 router.get('/:name', function (req, res, next) {
   if ( req.url.includes('flag.txt')){
     return res.send('Access not allowed; nice try.')
   }
-
   next()
 }, express.static('public/images/avatars'));
 
