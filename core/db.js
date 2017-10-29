@@ -78,8 +78,11 @@ db.serialize(function () {
   );
 
 });
-module.exports.getProduct = function (product_id, user, done) {
-  return module.exports.getAllProducts(user, {product_id: product_id}, done)
+module.exports.getProduct = function (user, product_id, done) {
+  return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
+    // Return first results
+    done(err, rows[0])
+  })
 };
 
 module.exports.getAllProducts = function (user, filter, done) {
@@ -126,6 +129,49 @@ module.exports.getAllProducts = function (user, filter, done) {
       return done(null, ret)
     });
 };
+
+module.exports.purchaseProduct = function (user, product, done) {
+  module.exports.updateUserCredits(user, 0 - product.cost, function (err) {
+    if(err) { return done ? done(err) : false }
+
+    // Check if there is already an Entry in the User_Product Table
+    var q = 'SELECT * FROM ' + USER_PROD_DB +
+        ' WHERE `user_id` = ' + user.id +
+        ' AND `product_id` = ' + product.id;
+    db.get(q, function (err, row) {
+      var q = '';
+      if(row) {
+        // Update
+        q = 'UPDATE ' + USER_PROD_DB +
+            ' SET owned = 1' +
+            ' WHERE `user_id` = ' + user.id +
+            ' AND `product_id` = ' + product.id;
+      } else {
+        q = 'INSERT INTO ' + USER_PROD_DB + '(user_id, product_id, owned)' +
+            ' VALUES (' +
+            user.id + ',' +     // user_id
+            product.id + ',' +  // product_id
+            '1' + ')'           // owned
+      }
+      db.run(q, {}, done);
+    });
+  });
+};
+
+/**
+ * Modify a User's credits
+ * @param user          User to Modify
+ * @param creditChange  Amount of Credits (Positive/Negative)
+ * @param done
+ */
+module.exports.updateUserCredits = function (user, creditChange, done) {
+  var q = 'UPDATE ' + USER_DB +
+      ' SET credits = ' + (user.credits + creditChange) +
+      ' WHERE `id` = ' + user.id;
+  db.run(q, {}, done)
+};
+// Close the DB, open for each request
+// db.close();
 
 module.exports._db = db;
 module.exports.USER_DB = USER_DB;

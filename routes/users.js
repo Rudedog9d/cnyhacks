@@ -39,7 +39,9 @@ router.post('/register', /* UNAUTHENTICATED ROUTE */
         return res.render('users/login.html', {register: true, error: 'Username already exists'});
       }
 
-      return res.render('users/login.html', {register: false, error: 'Registration successful. Please log in'});
+      req.logIn(user, null, function () {
+        return res.redirect('/users/' + user.username);
+      })
     })(req, res);
 });
 

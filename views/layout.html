@@ -47,6 +47,15 @@
 <footer>
   {% block footer %}
   {% endblock footer %}
+  <script>
+    WebStore.user = {
+      username: '{{user.username}}',
+      credits: parseInt('{{user.credits}}'),
+      bio: '{{user.bio}}',
+      id: '{{user.id}}',
+      golden_credits: parseInt('{{user.golden_credits}}')
+    }
+  </script>
 </footer>
 
 </html>

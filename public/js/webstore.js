@@ -75,12 +75,18 @@ var WebStore;
   
   WebStore.purchaseItem = function (id) {
     console.log('purchasing ID', id);
-    $.post('/store/items/' + id + '/purchase', {}, function (data, status) {
-      if(status === 200) {
-        return WebStore.success('Item purchased successfully!')
+    $.ajax({
+      url: '/store/items/' + id + '/purchase',
+      method: 'POST',
+      success: function (data) {
+        console.log(data);
+        WebStore.success('Item purchased successfully!');
+      },
+      error: function (err) {
+        var msg = err.responseJSON.error || err.responseText || 'An Error has occurred';
+        WebStore.error(msg, err)
       }
-      return WebStore.error('An Error has occurred', [data, status])
-    })
+    });
   };
 
 })();
