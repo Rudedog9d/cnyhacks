@@ -22,7 +22,9 @@ router.get('/', function (req, res, next) {
 // cant nav to /avatars/flag.txt
 router.get('/:name', function (req, res, next) {
   if ( req.url.includes('flag.txt')){
-    return res.send('Access not allowed; nice try.')
+
+    return res.send('Access not allowed; nice try. <br>' +
+      '<img src="/images/rick.gif" style="width:100%;height:100%"></img>')
   }
   next()
 }, express.static('public/images/avatars'));
