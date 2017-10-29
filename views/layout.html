@@ -12,7 +12,6 @@
 
   <!-- Custom Stylesheets -->
   <link rel='stylesheet' href='/css/style.css'/>
-  <link rel='stylesheet' href='/css/woahwhatisthis.css'/>
 
   {% block head %}
   <title>{{ title }}</title>
@@ -26,6 +25,7 @@
     <a href="/" class="brand-logo">{{ ProjectName }}</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/store">Store</a></li>
+      <li><a href="/store/golden">Golden Store</a></li>
       {% if user and user.username %}
       <li><a href="/users/{{user.username}}">Account</a></li>
       <li><a href="/users/logout" class="btn">Logout</a></li>

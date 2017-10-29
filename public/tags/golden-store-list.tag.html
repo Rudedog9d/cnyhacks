@@ -1,0 +1,38 @@
+<golden-store-list>
+
+    <div class="row">
+      <ul class="collection">
+        <p class="collection-item avatar" each="{items}" >
+          <img src="{imgScr}" alt="" class="circle">
+          <span class="flow-text">{name}</span>
+          <p>Description: {description} </p>>
+          <p>Golden Credits needed: {cost}</p>
+          </p>
+          <a class="waves-effect waves-light btn { 'disabled' : cost > WebStore.user.golden_credits }" onclick="{onItemPurchase}" href="javascript:void(0)">Buy</a>
+        </li>
+      </ul>
+    </div>
+    <item-golden-modal ref="modal"></item-golden-modal>
+
+    <script>
+        var tag = this;
+        tag.items = [];
+
+        tag.onItemPurchase = function (e) {
+          console.log(e);
+          tag.refs.modal.update({item: e.item});
+          tag.refs.modal.open()
+        };
+
+        tag.on('mount', function () {
+          $.ajax({
+            url: '/store/golden/items',
+            success: function (data) {
+              tag.items = data;
+              tag.update();
+              console.log(data)
+            }
+          })
+        })
+    </script>
+</golden-store-list>
