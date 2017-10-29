@@ -52,8 +52,9 @@ module.exports.db.get = function (q, cb) {
 // Init DB
 db.serialize(function () {
   createTable(PRODUCTS_DB, {
-    info:   'TEXT',
+    name:   'TEXT',
     cost:   'INTEGER',
+    description:  'TEXT',
     author: 'TEXT',
     id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
