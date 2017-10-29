@@ -10,6 +10,7 @@ var passport = require('passport');
 var nunjucks = require('nunjucks');
 
 var auth = require('./core/auth');
+var work = require('./routes/work');
 var index = require('./routes/index');
 var store = require('./routes/store');
 var admin = require('./routes/admin');
@@ -65,6 +66,7 @@ app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
 app.use('/avatars', avatars);
+app.use('/work', work);
 app.use('/store', store);
 app.use('/adminsonly', admin);
 
