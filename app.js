@@ -13,6 +13,7 @@ var auth = require('./core/auth');
 var index = require('./routes/index');
 var store = require('./routes/store');
 var admin = require('./routes/admin');
+var avatars = require('./routes/avatars');
 var users = require('./routes/users');
 var db = require('./core/db');
 var config = require('./config');
@@ -60,10 +61,10 @@ app.use('/sitemap.xml', express.static('public/sitemap.xml'));
 app.use('/vendor', express.static('node_modules'));
 app.use('/', index);
 app.use('/users', users);
-
 app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
+app.use('/avatars', avatars);
 app.use('/store', store);
 app.use('/adminsonly', admin);
 
