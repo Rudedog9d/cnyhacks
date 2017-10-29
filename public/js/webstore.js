@@ -80,7 +80,7 @@ var WebStore;
         return cb(data);
       },
       error: function (err) {
-        var msg = err.responseJSON.error || err.responseText || 'An Error has occurred';
+        var msg = err.responseJSON.error || err.responseText || 'An Unknown error has occurred';
         WebStore.error(msg, err)
       }
     });

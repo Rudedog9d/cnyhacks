@@ -129,7 +129,6 @@ module.exports.getAllProducts = function (user, filter, done) {
     q = q.substring(0, q.length - 4);
   }
 
-  // q += ' GROUP BY id;'; // End Query
   q += ';'; // End Query
   console.log(q);       // Log Query
   ret = [];
@@ -221,8 +220,7 @@ module.exports.getAllGoldenProducts = function (user, filter, done) {
   }
 
   // Build Query
-  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB +
-      (filter.length ? ' WHERE' : '' );
+  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB + (filter.length ? ' WHERE' : '' );
 
   // Add Filters
   for (var f in filter) {
