@@ -12,6 +12,30 @@ a {
   width: 100%
 }
 
+.h-1 {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.h-2 {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.h-3 {
+  font-size: large;
+  font-weight: bold;
+}
+
+.h-4 {
+  font-size: medium;
+  font-weight: bold;
+}
+
+.h-5 {
+  font-size: small;
+  font-weight: bold;
+}
 /* Styling to make cards flow together, top-to-bottom */
 /* Credits to this Anonymous Hero: https://codepen.io/anon/pen/xPbbYm */
 .cards-container {

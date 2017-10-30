@@ -1,7 +1,8 @@
 <item-card>
   <!-- Style tag needed when image is 404 -->
-  <div class="card" style="width: 100%">
+  <div class="card hoverable" style="width: 100%">
     <div class="card-image">
+      <!-- Todo: use Material Box http://materializecss.com/media.html -->
       <img src="{getImage()}" onerror="this.onerror=null;this.src='/images/404.jpg';">
       <span class="card-title white black-text">{ item.name } - <small>{ item.cost }CR</small></span>
     </div>
