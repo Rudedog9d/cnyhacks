@@ -72,19 +72,9 @@ Passport.use('local.login', localLoginStrategy);
 Passport.use('local.register', localRegisterStrategy);
 
 Passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-Passport.deserializeUser(function (user, done) {
-  done(null, user);
+  done(null, user.id);
 });
 
-// todo probably something smarter here
-// passport.serializeUser(function(user, done) {
-//   done(null, user._id);
-// });
-//
-// passport.deserializeUser(function(id, done) {
-//   User.findById(id, function(err, user) {
-//     done(err, user);
-//   });
-// });
+Passport.deserializeUser(function (user_id, done) {
+  db.findUserById(user_id, done)
+});
