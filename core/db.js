@@ -1,7 +1,15 @@
 var config = require('../config');
 var util = require('./util');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
+var db_name = '';
+if(config.debug) {
+  db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
+  console.log('DEBUG MODE: Using DB file ' + db_name);
+} else {
+  db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
+  console.log('PRODUCTION MODE: Using DB file ' + db_name);
+}
+var db = new sqlite3.Database(db_name);
 // var Database = require('better-sqlite3');
 // var db = new Database('../ColdStoneMemery.db');
 
@@ -96,7 +104,12 @@ db.serialize(function () {
 module.exports.findUserById = function (user_id, done) {
   var q = 'SELECT * FROM ' + USER_DB + ' WHERE id = ' + user_id + ';';
   db.get(q, done)
-}
+};
+
+module.exports.findUserByUsername = function (username, done) {
+  var q = 'SELECT * FROM ' + USER_DB + ' WHERE username = "' + username + '";';
+  db.get(q, done)
+};
 
 module.exports.getProduct = function (user, product_id, done) {
   return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
