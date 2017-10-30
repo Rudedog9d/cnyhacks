@@ -70,7 +70,7 @@ var WebStore;
     if(price <= 100) {
       return '/images/100.svg'
     } // else if(price <= 000)
-    return '/images/memes/question-mark-pewdiepie.jpg'
+    return '/images/question-mark-pewdiepie.jpg'
   };
 
   WebStore.getProducts = function (cb) {

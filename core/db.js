@@ -122,6 +122,7 @@ module.exports.getAllProducts = function (user, filter, done) {
     // Add Filters
     for (var f in filter) {
       var val = filter[f];
+      console.log('`' + f + '` = ' + val)
       q += '`' + f + '` = ' + val + ' AND ';
     }
 

@@ -44,7 +44,7 @@
       if(!tag.item) {
         return ''
       }
-      return tag.item.owned ? '/images/memes/' + tag.item.imgSrc : WebStore.getPriceImageUrl(tag.item.price);
+      return tag.item.owned ? '/resources/memes/' + tag.item.imgSrc : WebStore.getPriceImageUrl(tag.item.price);
     };
 
     tag.on('mount', function () {
