@@ -22,11 +22,8 @@
 {% block nav %}
 <nav class="green darken-3">
   <div class="nav-wrapper content-center">
-    <img style="height: 100%" src="/images/internet-troll-face-explorer.png">
-    <a href="/" class="brand-logo hide-on-med-and-down">
-      {{ ProjectName }}
-    </a>
-    <ul id="nav" class="right">
+    <a href="/" class="brand-logo">{{ ProjectName }}</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/store">Store</a></li>
       <li><a href="/store/golden">Golden Store</a></li>
       {% if user and user.username %}
