@@ -6,7 +6,7 @@ if(config.debug) {
   db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
   console.log('DEBUG MODE: Using DB file ' + db_name);
 } else {
-  db_name = config.ProjectName.replace(/ /g, '') + '.db';
+  db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
   console.log('PRODUCTION MODE: Using DB file ' + db_name);
 }
 var db = new sqlite3.Database(db_name);
@@ -135,6 +135,7 @@ module.exports.getAllProducts = function (user, filter, done) {
     // Add Filters
     for (var f in filter) {
       var val = filter[f];
+      console.log('`' + f + '` = ' + val)
       q += '`' + f + '` = ' + val + ' AND ';
     }
 
@@ -142,7 +143,7 @@ module.exports.getAllProducts = function (user, filter, done) {
     q = q.substring(0, q.length - 4);
   }
 
-  q += ' ORDER BY owned DESC;'; // End Query
+  q += ';'; // End Query
   console.log(q);       // Log Query
   ret = [];
 
