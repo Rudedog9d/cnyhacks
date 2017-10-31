@@ -4,10 +4,14 @@
       <ul class="collection">
         <li class="collection-item avatar" each="{items}" >
           <img src="{imgScr}" alt="" class="circle">
-          <span class="flow-text">{name}</span>
-          <p>Description: {description} </p>>
-          <p>Golden Credits needed: {cost}</p>
-          <a class="waves-effect waves-light btn { 'disabled' : cost > WebStore.user.golden_credits }" onclick="{onItemPurchase}" href="javascript:void(0)">Buy</a>
+          <span class="flow-text">{name} - <small>{cost} Golden Credit{ cost > 1 ? 's' : '' }</small></span>
+          <p>{description}</p>
+          <!--<p>Golden Credits needed: {cost}</p>-->
+          <a class="waves-effect waves-light btn { 'disabled' : cost > WebStore.user.golden_credits }"
+             onclick="{onItemPurchase}" href="javascript:void(0)">
+            <!-- Todo add tooltip 'not enough credits' -->
+            View
+          </a>
         </li>
       </ul>
     </div>
