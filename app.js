@@ -14,7 +14,7 @@ var work = require('./routes/work');
 var index = require('./routes/index');
 var store = require('./routes/store');
 var admin = require('./routes/admin');
-var avatars = require('./routes/avatars');
+var resources = require('./routes/resources');
 var users = require('./routes/users');
 var db = require('./core/db');
 var config = require('./config');
@@ -58,14 +58,13 @@ app.use(function (req, res, next) {
 });
 
 /* UNAUTHENTICATED ROUTES */
-app.use('/sitemap.xml', express.static('public/sitemap.xml'));
 app.use('/vendor', express.static('node_modules'));
 app.use('/', index);
 app.use('/users', users);
 app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
-app.use('/avatars', avatars);
+app.use('/resources', resources);
 app.use('/work', work);
 app.use('/store', store);
 app.use('/adminsonly', admin);

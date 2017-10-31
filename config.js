@@ -1,3 +1,4 @@
+// Todo use an actual configuration manager
 config = {
   // development || production
   mode: 'development',

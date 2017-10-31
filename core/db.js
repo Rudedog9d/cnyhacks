@@ -1,6 +1,15 @@
 var config = require('../config');
+var util = require('./util');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database(config.ProjectName.replace(/ /g, '') + '.db');
+var db_name = '';
+if(config.debug) {
+  db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
+  console.log('DEBUG MODE: Using DB file ' + db_name);
+} else {
+  db_name = config.ProjectName.replace(/ /g, '') + '.db';
+  console.log('PRODUCTION MODE: Using DB file ' + db_name);
+}
+var db = new sqlite3.Database(db_name);
 // var Database = require('better-sqlite3');
 // var db = new Database('../ColdStoneMemery.db');
 
@@ -53,8 +62,10 @@ module.exports.db.get = function (q, cb) {
 // Init DB
 db.serialize(function () {
   createTable(PRODUCTS_DB, {
-    info:   'TEXT',
+    name:   'TEXT',
+    imgSrc:   'TEXT',
     cost:   'INTEGER',
+    description:  'TEXT',
     author: 'TEXT',
     id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
@@ -89,8 +100,22 @@ db.serialize(function () {
   );
 
 });
-module.exports.getProduct = function (product_id, user, done) {
-  return module.exports.getAllProducts(user, {product_id: product_id}, done)
+
+module.exports.findUserById = function (user_id, done) {
+  var q = 'SELECT * FROM ' + USER_DB + ' WHERE id = ' + user_id + ';';
+  db.get(q, done)
+};
+
+module.exports.findUserByUsername = function (username, done) {
+  var q = 'SELECT * FROM ' + USER_DB + ' WHERE username = "' + username + '";';
+  db.get(q, done)
+};
+
+module.exports.getProduct = function (user, product_id, done) {
+  return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
+    // Return first results
+    done(err, rows[0])
+  })
 };
 
 module.exports.getAllProducts = function (user, filter, done) {
@@ -99,22 +124,26 @@ module.exports.getAllProducts = function (user, filter, done) {
     done = filter;
   }
 
-  // Build Query
-  var q = 'SELECT * FROM ' + PRODUCTS_DB +
-      ' LEFT JOIN ' + USER_PROD_DB + ' on ' + USER_PROD_DB + '.product_id = ' + PRODUCTS_DB + '.id' + ' WHERE ';
+  // Build Query - Thanks @tbutts
+  var q = 'Select * from ' + PRODUCTS_DB +
+      ' LEFT JOIN (SELECT * FROM ' + USER_PROD_DB + ' where user_id = ' + user.id + ') AS up' +
+      ' on products.id = up.product_id';
 
-  // Add Filters
-  for (var f in filter) {
-    var val = filter[f];
-    q += '`' + f + '` = ' + val + ' AND ';
+  // If additional filters exist, add them to the query
+  if(util.objectKeys(filter).length) {
+    q += ' WHERE ';
+    // Add Filters
+    for (var f in filter) {
+      var val = filter[f];
+      q += '`' + f + '` = ' + val + ' AND ';
+    }
+
+    // Hack to remove final AND
+    q = q.substring(0, q.length - 4);
   }
 
-  // Add filter for current user
-  q += ' (`user_id` == ' + user.id + ' OR `user_id` IS NULL)';
-  q += ';'; // End Query
-
-  console.log(q);
-
+  q += ' ORDER BY owned DESC;'; // End Query
+  console.log(q);       // Log Query
   ret = [];
 
   // Get all product Entries
@@ -123,22 +152,75 @@ module.exports.getAllProducts = function (user, filter, done) {
     function(err, row) {
       if(err){ return done(err) }
 
-      // Todo: make this not static and sucky
-      ret.push({
-        id: row.id,
-        info: row.info,
-        author: row.author,
-        owned: !!row.owned,
-        cost: row.cost
-      });
+      var obj = {};
+      for(prop in row) {
+        // Skip invalid props (todo improve)
+        if(prop === 'product_id' || prop === 'user_id')
+          continue;
+        obj[prop] = row[prop];
+      }
+
+      // Set owned to a Boolean value
+      obj['owned'] = !!row.owned;
+
+      // Add to return list
+      ret.push(obj)
     },
     // Complete callback
     function (err, numRows) {
-      return done(null, ret)
+      return done(err, ret)
     });
 };
 
-//above is regular product ***
+/**
+ * Purchase a product. Updates the User's credits first, then updates DB with purchase on success
+ * @param user    User Object purchasing Item
+ * @param product Product Object to purchase [ from getProduct() ]
+ * @param done    Callback when operation is finished - will be called with params from db.run()
+ */
+module.exports.purchaseProduct = function (user, product, done) {
+  module.exports.updateUserCredits(user, 0 - product.cost, function (err) {
+    if(err) { return done ? done(err) : false }
+
+    // Check if there is already an Entry in the User_Product Table
+    var q = 'SELECT * FROM ' + USER_PROD_DB +
+        ' WHERE `user_id` = ' + user.id +
+        ' AND `product_id` = ' + product.id;
+    db.get(q, function (err, row) {
+      var q = '';
+      if(row) {
+        // Update the existing entry (just in case)
+        q = 'UPDATE ' + USER_PROD_DB +
+            ' SET owned = 1' +
+            ' WHERE `user_id` = ' + user.id +
+            ' AND `product_id` = ' + product.id;
+      } else {
+        // Insert new entry to DB representing a user owns that item
+        q = 'INSERT INTO ' + USER_PROD_DB + '(user_id, product_id, owned)' +
+            ' VALUES (' +
+            user.id + ',' +     // user_id
+            product.id + ',' +  // product_id
+            '1' + ')'           // owned
+      }
+
+      // Run the Update/Insert
+      db.run(q, [], done);
+    });
+  });
+};
+
+/**
+ * Modify a User's credits
+ * @param user          User to Modify
+ * @param creditChange  Amount of Credits (Positive/Negative)
+ * @param done
+ */
+module.exports.updateUserCredits = function (user, creditChange, done) {
+  var q = 'UPDATE ' + USER_DB +
+      ' SET credits = ' + (user.credits + creditChange) +
+      ' WHERE `id` = ' + user.id;
+  db.run(q, {}, done)
+};
 
 module.exports.getGoldenProduct = function (product_id, user, done) {
   return module.exports.getAllGoldenProducts(user, {product_id: product_id}, done)
@@ -151,8 +233,7 @@ module.exports.getAllGoldenProducts = function (user, filter, done) {
   }
 
   // Build Query
-  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB +
-    (filter.length ? ' WHERE' : '' );
+  var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB + (filter.length ? ' WHERE' : '' );
 
   // Add Filters
   for (var f in filter) {
@@ -168,10 +249,10 @@ module.exports.getAllGoldenProducts = function (user, filter, done) {
   // Get all product Entries
   db.all(q,
 
-    // Complete callback
-    function (err, rows) {
-      return done(null, rows)
-    });
+      // Complete callback
+      function (err, rows) {
+        return done(null, rows)
+      });
 };
 
 module.exports._db = db;

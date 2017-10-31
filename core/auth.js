@@ -62,8 +62,12 @@ var localRegisterStrategy = new LocalStrategy(
         var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`) VALUES (?, ?, ?, ?);';
         console.log(query);
         db._db.run(query, [username, password, 10, 5], function (err) {
+          if(err) { return done(err) }
           console.log('user registered!', username);
-          return done(null, {username: username});
+          // Get user from DB so user has .id and can login
+          db.findUserByUsername(username, function (err, data) {
+            return done(err, data);
+          })
         });
       });
     });
@@ -72,19 +76,9 @@ Passport.use('local.login', localLoginStrategy);
 Passport.use('local.register', localRegisterStrategy);
 
 Passport.serializeUser(function (user, done) {
-  done(null, user);
-});
-Passport.deserializeUser(function (user, done) {
-  done(null, user);
+  done(null, user.id);
 });
 
-// todo probably something smarter here
-// passport.serializeUser(function(user, done) {
-//   done(null, user._id);
-// });
-//
-// passport.deserializeUser(function(id, done) {
-//   User.findById(id, function(err, user) {
-//     done(err, user);
-//   });
-// });
+Passport.deserializeUser(function (user_id, done) {
+  db.findUserById(user_id, done)
+});

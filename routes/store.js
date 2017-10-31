@@ -42,8 +42,7 @@ router.get('/items', function (req, res, next) {
 
 /* GET an item. */
 router.get('/items/:id', function (req, res, next) {
-  db.getProduct(req.params.id, req.user, function (err, product) {
-    console.log(err, product);
+  db.getProduct(req.user, req.params.id, function (err, product) {
     if(err) { return next(err); }
 
     return res.send(product);
@@ -52,14 +51,32 @@ router.get('/items/:id', function (req, res, next) {
 
 /* POST purchase an item. */
 router.post('/items/:id/purchase', function (req, res, next) {
+  db.getProduct(req.user, req.params.id, function (err, product) {
+    if(err) { return next(err); }
 
-  db.getProduct(req.params.id, req.user, function (err, product) {
-    console.log(err, product);
-    if(err) {
-      return next(err);
+    if(!product) {
+      res.status(404);
+      return res.send({error: 'Product Not Found'});
     }
 
-    return res.send(product);
+    if(product.owned) {
+      res.status(400);
+      return res.send({error: 'already owned'});
+    }
+
+    if(product.cost > req.user.credits) {
+      res.status(400);
+      return res.send({error: 'not enough credits'})
+    }
+
+    db.purchaseProduct(req.user, product, function (err) {
+      if(err) {
+        console.log(err);
+        res.status(500);
+        return res.send({error: 'Database Error', detail: err});
+      }
+      return res.send('OK');
+    })
   })
 });
 
