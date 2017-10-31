@@ -57,7 +57,6 @@ app.use(function (req, res, next) {
 });
 
 /* UNAUTHENTICATED ROUTES */
-app.use('/sitemap.xml', express.static('public/sitemap.xml'));
 app.use('/vendor', express.static('node_modules'));
 app.use('/', index);
 app.use('/users', users);

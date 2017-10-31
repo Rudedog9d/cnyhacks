@@ -16,7 +16,7 @@ function getDirs(rootDir, cb) {
 
 // GET directory listing of avatars
 router.get('/avatars', function (req, res, next) {
-  getDirs('public/images/avatars', function (dirs) {
+  getDirs('resources/avatars', function (dirs) {
     res.send(dirs);
   });
 });
@@ -31,7 +31,7 @@ router.get('/avatars/:name', function (req, res, next) {
   }
   // Else serve avatar file
   return next()
-}, express.static('public/images'));
+}, express.static('resources'));
 
 // GET meme with access control
 router.get('/memes/:name', function (req, res, next) {
