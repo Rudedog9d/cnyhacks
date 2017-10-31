@@ -1,6 +1,7 @@
+// Todo use an actual configuration manager
 config = {
   // development || production
-  mode: 'development',
+  mode: 'production',
   ProjectName: 'Cold Stone Memery'
 };
 
