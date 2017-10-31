@@ -1,22 +1,9 @@
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
+
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
-
-function login(req, res, next, user) {
-  req.logIn(user, function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    // Redirect to user homepage on successful login
-    if(req.query.url){
-      return res.redirect(req.query.url)
-    }
-    return res.redirect('/users/' + user.username)
-  })
-}
 
 /* TODO GET users listing. */
 /* currently redirect to login page or user homepage */
@@ -52,7 +39,9 @@ router.post('/register', /* UNAUTHENTICATED ROUTE */
         return res.render('users/login.html', {register: true, error: 'Username already exists'});
       }
 
-      return login(req, res, next, user);
+      req.logIn(user, null, function () {
+        return res.redirect('/users/' + user.username);
+      })
     })(req, res);
 });
 
@@ -74,7 +63,17 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
         }
 
         // Checks passed, Login succeeded
-        return login(req, res, next, user);
+        req.logIn(user, function (err) {
+          if (err) {
+            return next(err);
+          }
+
+          // Redirect to user homepage on successful login
+          if(req.query.url){
+            return res.redirect(req.query.url)
+          }
+          return res.redirect('/users/' + user.username)
+        })
       })(req, res) // Be sure to CALL the damn function that is returned
     }
 );

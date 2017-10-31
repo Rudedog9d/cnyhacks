@@ -62,12 +62,8 @@ var localRegisterStrategy = new LocalStrategy(
         var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`) VALUES (?, ?, ?, ?);';
         console.log(query);
         db._db.run(query, [username, password, 10, 5], function (err) {
-          if(err) { return done(err) }
           console.log('user registered!', username);
-          // Get user from DB so user has .id and can login
-          db.findUserByUsername(username, function (err, data) {
-            return done(err, data);
-          })
+          return done(null, {username: username});
         });
       });
     });
