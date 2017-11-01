@@ -102,4 +102,36 @@ var WebStore;
     });
   };
 
+  WebStore.cookieClicked = function (e) {
+    /* TODO: The API for this seems buggy....
+router.post('/work', function (req, res, next) {
+  db.updateUserCredits(
+    req.user,
+    req.body.credits ? req.user.credits - req.body.credits : 1,
+    function (err, product) {
+      if(err) { return next(err); }
+
+      return res.send(product);
+  });
+});
+    * */
+    console.log('cookie clicked +1')
+    $.ajax({
+      url: '/users/work',
+      method: 'POST',
+      data: {
+        credits: 1
+      },
+      success: function (data) {
+        WebStore.success('Credits +1');
+        // done(data);
+      },
+      error: function (err) {
+        var msg = err.responseText || 'An Error has occurred';
+        WebStore.error(msg, err);
+        // done();
+      }
+    });
+  }
+
 })();

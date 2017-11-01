@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Work bitch</title>
-  <p>Get to it!</p>
-</head>
-<body>
+{% extends "layout.html" %}
 
-</body>
-</html>
+{% block head %}
+
+{{ super() }}
+
+{% endblock head %}
+
+
+{% block content %}
+
+<div class="valign-wrapper" style="height: calc(100vh - 64px); overflow: hidden">
+  <div class="row" style="height: 100%;">
+    <div class="col content-center" style="height: 100%;">
+      <img src="/images/cookie.png" onclick="WebStore.cookieClicked()" style="height: 100%;">
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock footer %}

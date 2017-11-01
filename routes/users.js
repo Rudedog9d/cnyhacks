@@ -3,6 +3,8 @@ var passport = require('passport');
 var router = express.Router();
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
+var db = require('../core/db');
+
 
 function login(req, res, next, user) {
   req.logIn(user, function (err) {
@@ -86,6 +88,18 @@ router.get('/logout', requireLogin, function (req, res) {
 
 router.get('/:username', requireLogin, function (req, res, next) {
   return res.render('users/home.html', {username: req.params.user})
+});
+
+router.post('/work', requireLogin, function (req, res, next) {
+  const credits = parseInt(req.body.credits);
+  db.updateUserCredits(
+    req.user,
+    credits !== 1 ? req.user.credits - credits : 1,
+    function (err, product) {
+      if(err) { return next(err); }
+
+      return res.send(product);
+  });
 });
 
 module.exports = router;
