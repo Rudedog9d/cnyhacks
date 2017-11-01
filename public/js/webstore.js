@@ -123,13 +123,16 @@ router.post('/work', function (req, res, next) {
         credits: 1
       },
       success: function (data) {
-        WebStore.success('Credits +1');
-        // done(data);
+        var delta = 1;
+        if(data){
+          delta = data.credits;
+          $('#credits').html(data.credits);
+        }
+        WebStore.success('Credits ' + delta > 0 ? '+' + delta : delta);
       },
       error: function (err) {
         var msg = err.responseText || 'An Error has occurred';
         WebStore.error(msg, err);
-        // done();
       }
     });
   }

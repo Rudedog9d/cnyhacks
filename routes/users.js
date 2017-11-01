@@ -95,10 +95,14 @@ router.post('/work', requireLogin, function (req, res, next) {
   db.updateUserCredits(
     req.user,
     credits !== 1 ? req.user.credits - credits : 1,
-    function (err, product) {
+    function (err) {
       if(err) { return next(err); }
 
-      return res.send(product);
+      db.findUserById(req.user.id, function (err, user) {
+        if(err) { return res.send({}); }
+
+        return res.send(user);
+      })
   });
 });
 
