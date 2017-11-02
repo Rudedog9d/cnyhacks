@@ -5,7 +5,12 @@ CNY Hackathon Web CTF
 
 Running cnyhacks is just like running any other NPM app, but here's the copy-paste verison:
 ```bash
-# Initialize Git LFS ( Requiured to pull binary files - get it from https://github.com/git-lfs/git-lfs/ )
+# Install git lfs if you don't have it (https://github.com/git-lfs/git-lfs/wiki/Installation)
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git-lfs
+git lfs install
+
+# Initialize Git LFS ( Required to pull binary files - get it from https://github.com/git-lfs/git-lfs/ )
 git lfs install
 
 # Clone Repo
