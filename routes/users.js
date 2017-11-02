@@ -123,6 +123,9 @@ router.post('/:username/update', requireLogin, function (req, res, next) {
   }
 
   db.findUserByUsername(req.params.username, function (err, user) {
+    if(req.id !== user.id) {
+      return res.send({error: `no permission to edit user '${user.username}'`}, 403)
+    }
     if(err || !user) { return res.send('User not found', 404) }
     db.updateUser(user, updates, function (err, user) {
       if(err) { return res.sendStatus(200); /* OK, but no user */ }

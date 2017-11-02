@@ -143,7 +143,7 @@ var WebStore;
         return done(null, data);
       },
       error: function (err) {
-        var msg = err.responseText || 'An Error has occurred';
+        var msg = (err.responseJSON && err.responseJSON.error ? err.responseJSON.error : false) || err.responseText || 'An Error has occurred';
         WebStore.error(msg, err);
         return done(err);
       }
