@@ -4,6 +4,7 @@ var router = express.Router();
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
 var db = require('../core/db');
+var util = require('../core/util');
 
 
 function login(req, res, next, user) {
@@ -87,7 +88,40 @@ router.get('/logout', requireLogin, function (req, res) {
 });
 
 router.get('/:username', requireLogin, function (req, res, next) {
-  return res.render('users/home.html', {username: req.params.user})
+  db.findUserByUsername(req.params.username, function (err, user) {
+    if(err) { return res.send('User not found', 404) }
+    return res.render('users/home.html', {page_user: user})
+  })
+});
+
+// GET User object (This is a really, REALLY dumb route)
+router.get('/api/:username', requireLogin, function (req, res, next) {
+  db.findUserByUsername(req.params.username, function (err, user) {
+    if(err) { return res.send('User not found', 404) }
+    return res.send(user);
+  })
+});
+
+router.post('/:username/update', requireLogin, function (req, res, next) {
+  var updates = {};
+  for(prop of ['bio', 'avatar']) {
+    if(req.body[prop]) {
+      updates[prop] = req.body[prop];
+    }
+  }
+
+  if(!util.objectKeys(updates)) {
+    res.send('invalid options provided', 400)
+  }
+
+  db.findUserByUsername(req.params.username, function (err, user) {
+    if(err) { return res.send('User not found', 404) }
+    db.updateUser(user, updates, function (err, user) {
+      if(err) { return res.sendStatus(200); /* OK, but no user */ }
+
+      return res.send(user);
+    })
+  })
 });
 
 router.post('/work', requireLogin, function (req, res, next) {

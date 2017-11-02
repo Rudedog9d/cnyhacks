@@ -1,0 +1,131 @@
+<user-info>
+
+  <div class="row">
+    <div class="col s6">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title">Avatar</div>
+          <div class="row">
+            <div class="col">
+              <img src="/resources/avatars/{ avatar || user.avatar || 'unknown.png' }"
+                   alt="user avatar" class="circle responsive-img" onerror="this.src='/resources/avatars/unknown.png';">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s6">
+              <select id="avatar-select">
+                <option value="" disabled selected></option>
+                <option each="{ avatar in avatars }" value="[avatar]" class="circle left"
+                        data-icon="/resources/avatars/{avatar}">{avatar}</option>
+              </select>
+              <label>Choose a new avatar</label>
+            </div>
+
+            <a id="avatar-save-btn" class="waves-effect waves-light green btn right {disabled: !avatar}">Save</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col s6">
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title">
+            User Bio
+            <a href="javascript:void(0)" id="bio-edit-btn"><button class="btn right">Edit</button></a>
+          </div>
+
+          <div class="row">
+            <div class="col s12 {hide: editingBio}" id="view-bio">
+              <div id="bio"></div>
+            </div>
+            <div class="input-field col s12 {hide: !editingBio}" id="edit-bio">
+              <textarea id="bio-ta" class="materialize-textarea" data-length="250"></textarea>
+              <label for="bio-ta">Bio</label>
+              <a id="cancel-bio-btn" class="waves-effect waves-light red btn left">Cancel</a>
+              <a id="save-bio-btn" class="waves-effect waves-light green btn right">Save</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var tag = this;
+    tag.user = {};
+    tag.avatars = [];
+    tag.avatar = null;
+    tag.editingBio = false;
+
+    tag.onEditBio = function() {
+      tag.update({editingBio: true});
+    };
+
+    tag.getAvatars = function () {
+      $.ajax({
+        url: '/resources/avatars',
+        success: function (data) {
+          tag.update({avatars: data});
+        }
+      })
+    };
+
+    tag.onUpdateAvatar = function (e) {
+      tag.update({avatar: e.target.selectedOptions[0].text});
+    };
+
+    tag.onSaveAvatar = function () {
+      WebStore.updateUser({avatar: tag.avatar}, function (err, user) {
+        if(!err) {
+          tag.update({avatar: null});
+        }
+      });
+    };
+
+    tag.onSaveBio = function (e) {
+      console.log(e);
+      WebStore.updateUser({bio: $('#bio-ta').val()}, function (err, user) {
+        if(!err) {
+          console.log(tag.user)
+          tag.update({editingBio: false});
+        }
+      })
+    };
+
+    tag.on('update', function () {
+      // Set user bio (in an exploitable way)
+      $('#bio').html(WebStore.convertHtml(tag.user.bio));
+      $('#bio-ta').val(WebStore.convertHtml(tag.user.bio))
+    });
+
+    tag.on('updated', function () {
+      // Re-render fancy select
+      $('select').material_select();
+      $('textarea#user-bio').characterCounter();
+    });
+
+    tag.on('mount', function () {
+      // Todo this is really messy -_-
+      console.log('user-info mounted!');
+      tag.getAvatars();
+
+      // Manually update user to get bio because nunjucks does it weird :/
+      WebStore.getUser(WebStore.locals.page_user.username, function (err, data) {
+        if(err) { /* Do stuff */ }
+        tag.update({user: data})
+      });
+
+      $('#avatar-select').on('change', tag.onUpdateAvatar);
+      $('#avatar-save-btn').on('click', tag.onSaveAvatar);
+      $('#save-bio-btn').on('click', tag.onSaveBio);
+      $('#cancel-bio-btn').on('click', function () {
+        tag.update({editingBio: false});
+      });
+      $('#bio-edit-btn').on('click', function () {
+        tag.update({editingBio: true});
+      });
+    })
+  </script>
+</user-info>

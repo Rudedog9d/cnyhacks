@@ -216,10 +216,28 @@ module.exports.purchaseProduct = function (user, product, done) {
  * @param done
  */
 module.exports.updateUserCredits = function (user, creditChange, done) {
-  var q = 'UPDATE ' + USER_DB +
-      ' SET credits = ' + (user.credits + creditChange) +
-      ' WHERE `id` = ' + user.id;
-  db.run(q, {}, done)
+  module.exports.updateUser(user, {credits: (user.credits + creditChange)}, done)
+};
+
+/**
+ * Modify a User
+ * @param user    User to Modify
+ * @param updates Fields to update
+ * @param done
+ */
+module.exports.updateUser = function (user, updates, done) {
+  let q = 'UPDATE ' + USER_DB + ' SET ';
+  for(update in updates) {
+    var v = updates[update];
+    q += '`' + update + '` = ' + (typeof v === 'string' ? '"' + v + '"' : v) + ','
+  }
+  // Hack to remove final ','
+  q = q.substring(0, q.length - 1);
+  q += ' WHERE `id` = ' + user.id + ';';
+
+  db.run(q, {}, function (err) {
+    done(err, Object.assign(user, updates))
+  })
 };
 
 module.exports.getGoldenProduct = function (product_id, user, done) {

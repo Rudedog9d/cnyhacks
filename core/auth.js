@@ -59,9 +59,17 @@ var localRegisterStrategy = new LocalStrategy(
           return done(null, false);
         }
 
-        var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`) VALUES (?, ?, ?, ?);';
+        var values = [
+          username,  // username
+          password,  // password
+          10,        // default credits
+          5,         // default golden credits
+          'I am <b>Awesome!</b>' // Default Bio
+        ];
+
+        var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`, `bio`) VALUES (?, ?, ?, ?, ?);';
         console.log(query);
-        db._db.run(query, [username, password, 10, 5], function (err) {
+        db._db.run(query, values, function (err) {
           if(err) { return done(err) }
           console.log('user registered!', username);
           // Get user from DB so user has .id and can login
