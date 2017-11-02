@@ -102,4 +102,43 @@ var WebStore;
     });
   };
 
+  WebStore.cookieClicked = function (e) {
+    /* TODO: The API for this seems buggy....
+router.post('/work', function (req, res, next) {
+  db.updateUserCredits(
+    req.user,
+    req.body.credits !== 1 ? req.user.credits - req.body.credits : 1,
+    function (err) {
+      if(err) { return next(err); }
+
+      db.findUserById(req.user.id, function (err, user) {
+        if(err) { return res.send({}); }
+
+        return res.send(user);
+      })
+  });
+});
+    * */
+    $.ajax({
+      url: '/users/work',
+      method: 'POST',
+      data: {
+        credits: 1
+      },
+      success: function (data) {
+        var delta = 1;
+        if(data && data.credits){
+          delta = data.credits - WebStore.user.credits;
+          WebStore.user.credits = data.credits;
+          $('#credits').html(data.credits);
+        }
+        WebStore.success('Credits ' + ( delta > 0 ? '+' + delta : delta));
+      },
+      error: function (err) {
+        var msg = err.responseText || 'An Error has occurred';
+        WebStore.error(msg, err);
+      }
+    });
+  }
+
 })();
