@@ -8,7 +8,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/products/:id', function(req, res, next) {
-  res.render('store/detail.html', {item_id: req.params.id});
+  db.getProduct(req.user, req.params.id, function (err, product) {
+    if(err || !product) {
+      return res.send(404, 'Product not found')
+    }
+    res.render('store/detail.html',
+        {
+          item_id: req.params.id,
+          flag: product.imgSrc === 'flag.png' ? 'flag{fa1s3A1ArM}' : null
+        });
+  })
 });
 
 /* GET home page. */
