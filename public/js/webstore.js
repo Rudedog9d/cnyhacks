@@ -107,15 +107,18 @@ var WebStore;
 router.post('/work', function (req, res, next) {
   db.updateUserCredits(
     req.user,
-    req.body.credits ? req.user.credits - req.body.credits : 1,
-    function (err, product) {
+    req.body.credits !== 1 ? req.user.credits - req.body.credits : 1,
+    function (err) {
       if(err) { return next(err); }
 
-      return res.send(product);
+      db.findUserById(req.user.id, function (err, user) {
+        if(err) { return res.send({}); }
+
+        return res.send(user);
+      })
   });
 });
     * */
-    console.log('cookie clicked +1')
     $.ajax({
       url: '/users/work',
       method: 'POST',
@@ -124,11 +127,12 @@ router.post('/work', function (req, res, next) {
       },
       success: function (data) {
         var delta = 1;
-        if(data){
-          delta = data.credits;
+        if(data && data.credits){
+          delta = data.credits - WebStore.user.credits;
+          WebStore.user.credits = data.credits;
           $('#credits').html(data.credits);
         }
-        WebStore.success('Credits ' + delta > 0 ? '+' + delta : delta);
+        WebStore.success('Credits ' + ( delta > 0 ? '+' + delta : delta));
       },
       error: function (err) {
         var msg = err.responseText || 'An Error has occurred';
