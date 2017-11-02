@@ -4,7 +4,29 @@ var db = require('../core/db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('store/store.html');
+  res.render('store/store.html');
+});
+
+router.get('/products/:id', function(req, res, next) {
+  db.getProduct(req.user, req.params.id, function (err, product) {
+    if(err || !product) {
+      var err = new Error('Product not found');
+      err.status = 404;
+      return next(err);
+    }
+
+    if(!product.owned) {
+      var err = new Error('Product Not Owned');
+      err.status = 403;
+      return next(err);
+    }
+
+    res.render('store/detail.html',
+        {
+          item_id: req.params.id,
+          flag: product.imgSrc === 'flag.png' ? 'flag{fa1s3A1ArM}' : null
+        });
+  })
 });
 
 /* GET home page. */
