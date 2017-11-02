@@ -101,6 +101,10 @@ db.serialize(function () {
 
 });
 
+module.exports.findAllUsers = function (done) {
+  db.all('SELECT * FROM ' + USER_DB + ';', done)
+};
+
 module.exports.findUserById = function (user_id, done) {
   var q = 'SELECT * FROM ' + USER_DB + ' WHERE id = ' + user_id + ';';
   db.get(q, done)

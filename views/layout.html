@@ -30,8 +30,9 @@
       <li><a href="/work">Work</a></li>
       <li><a href="/store">Store</a></li>
       <li><a href="/store/golden">Golden Store</a></li>
+      <li><a href="/users">Users</a></li>
       {% if user and user.username %}
-      <li><a href="/users/{{user.username}}">Account</a></li>
+      <li><a href="/users/{{user.username}}">My Account</a></li>
       <li><a href="/users/logout" class="btn">Logout</a></li>
       {% else %}
       <li><a href="/users/login" class="btn">Login</a></li>

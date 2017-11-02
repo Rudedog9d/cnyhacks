@@ -21,9 +21,17 @@ function login(req, res, next, user) {
   })
 }
 
-/* TODO GET users listing. */
 /* currently redirect to login page or user homepage */
-router.get('/', requireLogin);
+router.get('/', requireLogin, function (req, res, next) {
+  res.render('users/index.html')
+});
+
+router.get('/api/users', requireLogin, function (req, res, next) {
+  db.findAllUsers(function (err, data) {
+    if(err) { return res.send({error: 'Internal Server Error'}, 500) }
+    return res.send(data);
+  })
+});
 
 /* GET Login Page */
 router.get('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
@@ -89,7 +97,7 @@ router.get('/logout', requireLogin, function (req, res) {
 
 router.get('/:username', requireLogin, function (req, res, next) {
   db.findUserByUsername(req.params.username, function (err, user) {
-    if(err) { return res.send('User not found', 404) }
+    if(err || !user) { return res.send('User not found', 404) }
     return res.render('users/home.html', {page_user: user})
   })
 });
@@ -97,7 +105,7 @@ router.get('/:username', requireLogin, function (req, res, next) {
 // GET User object (This is a really, REALLY dumb route)
 router.get('/api/:username', requireLogin, function (req, res, next) {
   db.findUserByUsername(req.params.username, function (err, user) {
-    if(err) { return res.send('User not found', 404) }
+    if(err || !user) { return res.send('User not found', 404) }
     return res.send(user);
   })
 });
@@ -115,7 +123,7 @@ router.post('/:username/update', requireLogin, function (req, res, next) {
   }
 
   db.findUserByUsername(req.params.username, function (err, user) {
-    if(err) { return res.send('User not found', 404) }
+    if(err || !user) { return res.send('User not found', 404) }
     db.updateUser(user, updates, function (err, user) {
       if(err) { return res.sendStatus(200); /* OK, but no user */ }
 
@@ -133,7 +141,7 @@ router.post('/work', requireLogin, function (req, res, next) {
       if(err) { return next(err); }
 
       db.findUserById(req.user.id, function (err, user) {
-        if(err) { return res.send({}); }
+        if(err || !user) { return res.send({}); }
 
         return res.send(user);
       })

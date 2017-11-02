@@ -109,6 +109,18 @@ var WebStore;
     });
   };
 
+  WebStore.getAllUsers = function (done) {
+    $.ajax({
+      url: '/users/api/users',
+      success: function (data) {
+        return done(null, data);
+      },
+      error: function (err) {
+        return done(err);
+      }
+    });
+  };
+
   WebStore.getUser = function (username, done) {
     $.ajax({
       url: '/users/api/' + username,
@@ -121,14 +133,12 @@ var WebStore;
     });
   };
 
-  WebStore.updateUser = function (ops, done) {
-    var data = Object.assign({}, WebStore.user, ops);
+  WebStore.updateUser = function (user, updates, done) {
     $.ajax({
-      url: '/users/' + WebStore.user.username + '/update',
+      url: '/users/' + user.username + '/update',
       method: 'POST',
-      data: data,
+      data: updates,
       success: function (data) {
-        WebStore.user = data;
         WebStore.success('User updated successfully', data);
         return done(null, data);
       },
