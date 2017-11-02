@@ -112,7 +112,9 @@ router.get('/api/:username', requireLogin, function (req, res, next) {
 
 router.post('/:username/update', requireLogin, function (req, res, next) {
   var updates = {};
-  for(prop of ['bio', 'avatar']) {
+  var valid_fields = ['bio', 'avatar'];
+  for(prop in valid_fields) {
+    prop = valid_fields[prop];
     if(req.body[prop]) {
       updates[prop] = req.body[prop];
     }
@@ -123,8 +125,9 @@ router.post('/:username/update', requireLogin, function (req, res, next) {
   }
 
   db.findUserByUsername(req.params.username, function (err, user) {
-    if(req.id !== user.id) {
-      return res.send({error: `no permission to edit user '${user.username}'`}, 403)
+    if(req.user.id !== user.id) {
+      console.log(req.user.id, user)
+      return res.send({error: 'no permission to edit user ' + user.username}, 403)
     }
     if(err || !user) { return res.send('User not found', 404) }
     db.updateUser(user, updates, function (err, user) {

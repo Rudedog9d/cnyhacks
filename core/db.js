@@ -230,7 +230,7 @@ module.exports.updateUserCredits = function (user, creditChange, done) {
  * @param done
  */
 module.exports.updateUser = function (user, updates, done) {
-  let q = 'UPDATE ' + USER_DB + ' SET ';
+  var q = 'UPDATE ' + USER_DB + ' SET ';
   for(update in updates) {
     var v = updates[update];
     q += '`' + update + '` = ' + (typeof v === 'string' ? '"' + v + '"' : v) + ','
