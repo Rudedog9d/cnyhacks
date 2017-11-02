@@ -10,8 +10,17 @@ router.get('/', function(req, res, next) {
 router.get('/products/:id', function(req, res, next) {
   db.getProduct(req.user, req.params.id, function (err, product) {
     if(err || !product) {
-      return res.send(404, 'Product not found')
+      var err = new Error('Product not found');
+      err.status = 404;
+      return next(err);
     }
+
+    if(!product.owned) {
+      var err = new Error('Product Not Owned');
+      err.status = 403;
+      return next(err);
+    }
+
     res.render('store/detail.html',
         {
           item_id: req.params.id,
