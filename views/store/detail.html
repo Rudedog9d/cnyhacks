@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<script type="riot/tag" src="/tags/item-details.tag.html"></script>
+
+{% endblock head %}
+
+
+{% block content %}
+<div class="row content-center">
+  <div class="col s3"></div>
+  <div class="col">
+    <item-details id="{{item_id}}"></item-details>
+  </div>
+  <div class="col s3"></div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+  $(document).ready(function () {
+    riot.mount('*')
+  });
+</script>
+
+{% endblock footer %}

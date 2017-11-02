@@ -85,6 +85,21 @@ var WebStore;
       }
     });
   };
+
+  WebStore.getProductById = function (id, done) {
+    if(!id || !done) { console.error('id and done cb are required!'); }
+    $.ajax({
+      url: '/store/items/' + id,
+      success: function (data) {
+        return done(null, data);
+      },
+      error: function (err) {
+        var msg = err.responseJSON.error || err.responseText || 'An Unknown error has occurred';
+        WebStore.error(msg, err)
+        done(err)
+      }
+    });
+  };
   
   WebStore.purchaseItem = function (id, done) {
     $.ajax({

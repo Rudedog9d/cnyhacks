@@ -4,7 +4,11 @@ var db = require('../core/db');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('store/store.html');
+  res.render('store/store.html');
+});
+
+router.get('/products/:id', function(req, res, next) {
+  res.render('store/detail.html', {item_id: req.params.id});
 });
 
 /* GET home page. */
