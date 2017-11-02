@@ -1,6 +1,11 @@
 var Passport = require('passport');
+var bcrypt = require('bcrypt');
 var LocalStrategy = require('passport-local').Strategy;
 var db = require('./db');
+
+const saltRounds = 10;
+const startingCredits = 10;
+const startingGoldenCredits = 5;
 
 module.exports.requireLogin = function (req, res, next) {
   // Todo: handle redirect to previous URL
@@ -28,13 +33,14 @@ var localLoginStrategy = new LocalStrategy(
         }
 
         // Check Password
-        if (row.password !== password) {
-          console.error('password does not match:', password);
-          return done(null, false);
-        }
+        bcrypt.compare(password, row.password, function(err, res) {
+          if (!res) {
+            return done(null, false);
+          }
 
-        console.log('user logged in!', username);
-        return done(null, row);
+          console.log('user logged in!', username);
+          return done(null, row);
+        });
       });
     }
 );
@@ -59,15 +65,17 @@ var localRegisterStrategy = new LocalStrategy(
           return done(null, false);
         }
 
-        var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`) VALUES (?, ?, ?, ?);';
-        console.log(query);
-        db._db.run(query, [username, password, 10, 5], function (err) {
-          if(err) { return done(err) }
-          console.log('user registered!', username);
-          // Get user from DB so user has .id and can login
-          db.findUserByUsername(username, function (err, data) {
-            return done(err, data);
-          })
+        bcrypt.hash(password, saltRounds, function(err, hash) {
+          var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`) VALUES (?, ?, ?, ?);';
+          console.log(query);
+          db._db.run(query, [username, hash, startingCredits, startingGoldenCredits], function (err) {
+            if(err) { return done(err) }
+            console.log('user registered!', username);
+            // Get user from DB so user has .id and can login
+            db.findUserByUsername(username, function (err, data) {
+              return done(err, data);
+            })
+          });
         });
       });
     });
