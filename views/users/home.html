@@ -4,39 +4,32 @@
 
 <title>{{ user.username }} - {{ ProjectName }}</title>
 
+<script type="riot/tag" src="/tags/user-info.tag.html"></script>
+
 {% endblock head %}
 
 {% block content %}
 
 <div class="row valign-wrapper">
   <div class="col s6">
-    <span class="h-1">Welcome back, {{ user.username }}!</span>
+    <h1 class="h-1">{{ page_user.username }}</h1>
   </div>
   <div class="col s3"></div>
   <div class="col s3">
     <ul class="collection">
       <li class="collection-item">
         Credits
-        <span class="secondary-content">{{user.credits}}</span>
+        <span class="secondary-content">{{page_user.credits}}</span>
       </li>
       <li class="collection-item yellow darken-2">
         Golden Credits
-        <span class="secondary-content">{{user.golden_credits}}</span>
+        <span class="secondary-content">{{page_user.golden_credits}}</span>
       </li>
     </ul>
   </div>
 </div>
 
-<div class="row">
-  <div class="col s12">
-    <div class="card">
-      <div class="card-content">
-        Todo: list of avatars
-        <!--Todo: list of avatars-->
-      </div>
-    </div>
-  </div>
-</div>
+<user-info edit="{{page_user.id == user.id}}"></user-info>
 
 {% endblock %}
 
@@ -44,8 +37,17 @@
 
 <script>
   $(document).ready(function () {
-//    riot.mount('*')
+    riot.mount('*')
   });
+
+  WebStore.locals.page_user = {
+    username: '{{page_user.username}}',
+    credits: parseInt('{{page_user.credits}}'),
+    bio: '{{page_user.bio}}',
+    id: '{{page_user.id}}',
+    golden_credits: parseInt('{{page_user.golden_credits}}'),
+    avatar: '{{page_user.avatar}}'
+  }
 </script>
 
 {% endblock footer %}

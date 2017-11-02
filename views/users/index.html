@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<title>{{ user.username }} - {{ ProjectName }}</title>
+
+<script type="riot/tag" src="/tags/user-list.tag.html"></script>
+
+{% endblock head %}
+
+{% block content %}
+
+<user-list></user-list>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+  $(document).ready(function () {
+    riot.mount('*')
+  });
+
+  WebStore.locals.page_user = {
+    username: '{{page_user.username}}',
+    credits: parseInt('{{page_user.credits}}'),
+    bio: '{{page_user.bio}}',
+    id: '{{page_user.id}}',
+    golden_credits: parseInt('{{page_user.golden_credits}}'),
+    avatar: '{{page_user.avatar}}'
+  }
+</script>
+
+{% endblock footer %}

@@ -1,0 +1,44 @@
+<user-list>
+  <div class="row">
+    <div each="{users}" class="col s12 m8 offset-m2 l6 offset-l3">
+      <a href="/users/{username}">
+        <div class="card-panel grey lighten-5 z-depth-1">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <h5 class="black-text center">{username}</h5>
+              <img src="/resources/avatars/{avatar || 'unknown.png'}" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            </div>
+            <div class="col s10">
+              <span id="user_{id}_bio" class="black-text"></span>
+              {renderContent(this)}
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    var tag = this;
+    tag.users = [];
+
+    tag.renderContent = function (user) {
+
+    }
+
+    tag.on('updated', function () {
+      for(let user of tag.users) {
+//        $('#user_' + user.id + '_bio').html(WebStore.convertHtml(user.bio))
+        $('#user_' + user.id + '_bio').html(user.bio)
+      }
+    })
+
+    tag.on('mount', function () {
+      console.log('user-list mounted!');
+      WebStore.getAllUsers(function (err, data) {
+        console.log(data)
+        tag.update({users: data})
+      })
+    })
+  </script>
+</user-list>

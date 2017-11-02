@@ -5,6 +5,9 @@ var WebStore;
     WebStore = {};
   }
 
+  // A Place to store local page variables as needed
+  WebStore.locals = {};
+
   // Set up logging with Toast and console messages
   /**
    * Log a message to the console and to the user via TOAST
@@ -66,6 +69,10 @@ var WebStore;
     //  Do AJAX here
   };
 
+  WebStore.convertHtml = function(convert){
+    return $("<span />", { html: convert }).text();
+  };
+
   WebStore.getPriceImageUrl = function (price) {
     if(price <= 100) {
       return '/images/100.svg'
@@ -113,6 +120,47 @@ var WebStore;
         var msg = err.responseJSON.error || err.responseText || 'An Error has occurred';
         WebStore.error(msg, err);
         done();
+      }
+    });
+  };
+
+  WebStore.getAllUsers = function (done) {
+    $.ajax({
+      url: '/users/api/users',
+      success: function (data) {
+        return done(null, data);
+      },
+      error: function (err) {
+        return done(err);
+      }
+    });
+  };
+
+  WebStore.getUser = function (username, done) {
+    $.ajax({
+      url: '/users/api/' + username,
+      success: function (data) {
+        return done(null, data);
+      },
+      error: function (err) {
+        return done(err);
+      }
+    });
+  };
+
+  WebStore.updateUser = function (user, updates, done) {
+    $.ajax({
+      url: '/users/' + user.username + '/update',
+      method: 'POST',
+      data: updates,
+      success: function (data) {
+        WebStore.success('User updated successfully', data);
+        return done(null, data);
+      },
+      error: function (err) {
+        var msg = (err.responseJSON && err.responseJSON.error ? err.responseJSON.error : false) || err.responseText || 'An Error has occurred';
+        WebStore.error(msg, err);
+        return done(err);
       }
     });
   };
