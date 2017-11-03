@@ -22,7 +22,8 @@ var config = require('./config');
 // set up session store so we can use it later for cookie monster
 var SQLiteStore = require('connect-sqlite3')(expressSession);
 var SessionStore = new SQLiteStore({
-  db: db.db_name
+  // db: db.db_name
+  db: 'sessions.db'
 });
 
 // Set Default Config Values

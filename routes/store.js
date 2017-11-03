@@ -36,17 +36,24 @@ router.get('/golden', function(req, res, next) {
 
 /* GET all golden items. */
 router.get('/golden/items', function (req, res, next) {
-  db.getAllGoldenProducts(req.user, {}, function (err, product) {
+  db.getAllGoldenProducts(req.user, {}, function (err, products) {
     if(err) { return next(err); }
 
-    return res.send(product);
+    ret = [];
+    for(var prod in products) {
+      prod = products[prod];
+      if(!prod.hidden) {
+        ret.push(prod)
+      }
+    }
+
+    return res.send(ret);
   })
 });
 
 /* GET a golden item. */
 router.get('/golden/items/:id', function (req, res, next) {
   db.getGoldenProduct(req.params.id, req.user, function (err, product) {
-    console.log(err, product);
     if(err) { return next(err); }
 
     return res.send(product);

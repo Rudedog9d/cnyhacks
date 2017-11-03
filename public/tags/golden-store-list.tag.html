@@ -31,9 +31,7 @@
           $.ajax({
             url: '/store/golden/items',
             success: function (data) {
-              tag.items = data;
-              tag.update();
-              console.log(data)
+              tag.update({items: data});
             }
           })
         })

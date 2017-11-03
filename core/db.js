@@ -77,6 +77,7 @@ db.serialize(function () {
     description: 'TEXT',
     content: 'TEXT',
     imgScr: 'TEXT',
+    hidden: 'INTEGER',
     id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
