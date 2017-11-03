@@ -26,18 +26,19 @@
       <h4>Cookie Monster</h4>
       <p>I've been craving some fresh cookies lately. Do you have one for me?</p>
       <div class="input-field col s6">
-        <input placeholder="s%3AHVdyEkdETirJ2wWXFlnD4Bp3VlKzWfwq.Ujbpaa%2BxaUOZDrux%2F%2F%2BFz5Fcepl4nOJ%2BcbSX4IqKHoQ" id="cm-input" type="text">
+        <input placeholder="ijoqJEHokOqttM0JaCt69DuL-x3m9-8K" id="cm-input" type="text">
         <label for="cm-input">Cookie</label>
       </div>
 
       <div class="divider" style="margin: 1rem"></div>
-      
+
+      <div id="cm-result"></div>
     </div>
     <div class="modal-footer">
       <a href="javascript:void(0)" class="waves-effect waves-green btn-flat" onclick="{onCookieSubmit}">
         Submit
       </a>
-      <a href="javascript:void(0)" class="mod al-action modal-close waves-effect waves-red btn-flat">
+      <a href="javascript:void(0)" class="modal-action modal-close waves-effect white-text btn-flat red left">
         Close
       </a>
     </div>
@@ -46,6 +47,22 @@
   <script>
     var tag = this;
     tag.items = [];
+
+    tag.onCookieSubmit = function () {
+      $.ajax({
+        url: '/cookies',
+        method: 'POST',
+        data: {
+          cookie: $('#cm-input').val()
+        },
+        success: function (data) {
+          $('#cm-result').html(data)
+        },
+        failure: function (err) {
+          $('#cm-result').html('Awe Crap. Internal Server Error :(')
+        }
+      })
+    };
 
     tag.onCookieClick = function (e) {
       $('#cm-modal').modal('open')
@@ -74,7 +91,7 @@
 
     tag.on('mount', function () {
       console.log('store-list mounted!');
-      $('#cm-modal').modal()
+      $('#cm-modal').modal();
       tag.updateProducts();
 
       tag.refs.modal.on('purchase', function (e) {

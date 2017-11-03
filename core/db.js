@@ -9,6 +9,7 @@ if(config.debug) {
   db_name = config.ProjectName.replace(/ /g, '') + '.db';
   console.log('PRODUCTION MODE: Using DB file ' + db_name);
 }
+module.exports.db_name = db_name;
 var db = new sqlite3.Database(db_name);
 // var Database = require('better-sqlite3');
 // var db = new Database('../ColdStoneMemery.db');
