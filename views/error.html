@@ -1,21 +1,12 @@
-
-
 {% extends "layout.html" %}
-
-{% block head %}
-
-{{ super() }}
-
-{% endblock head %}
-
 
 {% block content %}
 
 <div class="valign-wrapper" style="height: calc(100vh - 64px); overflow: hidden">
   <div class="row">
     <div class="">
-      <h2>{{ error.status }}</h2>
-      <h1>{{ message  }}</h1>
+      <h1>Oops, that's an error!</h1>
+      <h2>{{ error.status }} - <small>{{ message }}</small></h2>
 
 
       {% if error.stack %}
