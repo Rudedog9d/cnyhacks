@@ -46,7 +46,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(flash());
-
+console.log(process.env)
 app.use(expressSession({
   secret: 'mySecretKey',
   cookie: {
@@ -61,6 +61,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set('port', process.env.PORT || 3000);
 
 // Set local variables to send on EVERY request
 app.locals = {
@@ -118,7 +119,7 @@ app.use('/cookies', function (req, res, next) {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('DogNet Not Found');
   err.status = 404;
   next(err);
 });

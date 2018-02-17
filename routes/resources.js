@@ -24,9 +24,9 @@ router.get('/avatars', function (req, res, next) {
 // GET avatar file
 router.get('/avatars/:name', function (req, res, next) {
   // If name contains flag.txt, prevent access
-  if ( req.url.includes('flag.txt')){
+  if ( req.url.includes('flag')){
     // Return access denied message with rick roll image
-    return res.send('Access not allowed; nice try. <br>' +
+    return res.send('Access not allowed - "flag" is a forbidden word<br>' +
       '<img src="/images/rick.gif" style="width:100%;height:100%"></img>', 401)
   }
   // Else serve avatar file
