@@ -2,7 +2,7 @@
 config = {
   // development || production
   mode: 'production',
-  ProjectName: 'Cold Stone Memery'
+  ProjectName: 'CNY Hacks'
 };
 
 // default to production

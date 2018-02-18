@@ -55,13 +55,15 @@
   {% block footer %}
   {% endblock footer %}
   <script>
-    WebStore.user = {
-      username: '{{user.username}}',
-      credits: parseInt('{{user.credits}}'),
-      bio: '{{user.bio}}',
-      id: '{{user.id}}',
-      golden_credits: parseInt('{{user.golden_credits}}'),
-      avatar: '{{user.avatar}}'
+
+    // TODO UPDATE THIS
+    WebStore.locals.page_user = {
+      username: '{{page_user.username}}',
+      credits: parseInt('{{page_user.credits}}'),
+      bio: '{{page_user.bio}}',
+      id: '{{page_user.id}}',
+      golden_credits: parseInt('{{page_user.golden_credits}}'),
+      avatar: '{{page_user.avatar}}'
     }
   </script>
 </footer>
