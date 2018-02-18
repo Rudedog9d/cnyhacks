@@ -4,8 +4,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var db = require('./db');
 
 const saltRounds = 10;
-const startingCredits = 10;
-const startingGoldenCredits = 5;
 
 module.exports.requireLogin = function (req, res, next) {
   // Todo: handle redirect to previous URL
