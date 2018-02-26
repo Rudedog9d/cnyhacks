@@ -8,6 +8,7 @@
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
+    "bulma": "^0.6.2",
     "connect-flash": "^0.1.1",
     "connect-sqlite3": "^0.9.10",
     "cookie-parser": "~1.4.3",
@@ -15,6 +16,7 @@
     "ejs": "~2.5.6",
     "express": "~4.15.2",
     "express-session": "^1.15.6",
+    "font-awesome": "^4.7.0",
     "materialize-css": "^0.100.2",
     "morgan": "~1.8.1",
     "nunjucks": "^3.0.1",
