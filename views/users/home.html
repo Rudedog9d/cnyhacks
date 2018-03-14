@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<title>{{ user.username }} - {{ ProjectName }}</title>
+
+<script type="riot/tag" src="/tags/user-info.tag.html"></script>
+
+{% endblock head %}
+
+{% block content %}
+
+<user-info></user-info>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+  $(document).ready(function () {
+    riot.mount('*')
+  });
+</script>
+
+{% endblock footer %}
