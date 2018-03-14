@@ -92,7 +92,7 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
 
 router.get('/logout', requireLogin, function (req, res) {
   req.logOut();
-  return res.redirect('/store')
+  return res.redirect('/')
 });
 
 router.get('/:username', requireLogin, function (req, res, next) {
