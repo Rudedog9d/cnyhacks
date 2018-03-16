@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+
   <!-- Vendor Stylesheets -->
-  <link rel="stylesheet" href="/vendor/materialize-css/dist/css/materialize.min.css">
+  <link rel="stylesheet" href="/vendor/helper-css/css/margin.css">
+  <link rel="stylesheet" href="/vendor/helper-css/css/padding.css">
+  <link rel="stylesheet" href="/vendor/bulma/css/bulma.css">
+  <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.css"/>
 
   <!-- Vendor Javascript -->
   <script src="/vendor/jquery/dist/jquery.min.js"></script>
-  <script src="/vendor/materialize-css/dist/js/materialize.min.js"></script>
   <script src="/vendor/riot/riot+compiler.min.js"></script>
   <script src="/js/webstore.js"></script>
 
@@ -20,34 +24,81 @@
 <body>
 
 {% block nav %}
-<nav class="green darken-3">
-  <div class="nav-wrapper content-center">
-    <a href="/">
-    <img style="height: 100%" src="/images/internet-troll-face-explorer.png">
+<nav class="navbar is-transparent">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      <img src="https://bulma.io/images/bulma-logo.png" alt="{{ ProjectName }}: A Webmail client for today's times!" width="112" height="28">
     </a>
-    <a href="/" class="brand-logo hide-on-med-and-down">
-      {{ ProjectName }}
-    </a>
-    <ul id="nav" class="right">
-      <li><a href="/work">Work</a></li>
-      <li><a href="/store">Store</a></li>
-      <li><a href="/store/golden">Golden Store</a></li>
-      <li><a href="/users">Users</a></li>
+    <!-- Hamburger menu for small screens -->
+    <div class="navbar-burger burger" data-target="navbar-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="navbar-menu" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/">
+        {{ ProjectName }}
+      </a>
       {% if user and user.username %}
-      <li><a href="/users/{{user.username}}">My Account</a></li>
-      <li><a href="/users/logout" class="btn">Logout</a></li>
+      <a class="navbar-item" href="/users">
+        Users
+      </a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link" href="/users/{{user.username}}">
+          {{ user.username }}
+        </a>
+        <div class="navbar-dropdown is-boxed">
+          <a class="navbar-item" href="/users/{{user.username}}">
+            My Account
+          </a>
+          <a class="navbar-item" href="/users/setttings">
+            Settings
+          </a>
+          <a class="navbar-item" href="/users/logout">
+            Logout
+          </a>
+        </div>
+      </div>
       {% else %}
-      <li><a href="/users/login" class="btn">Login</a></li>
-      {% endif %}
-    </ul>
+      <a class="navbar-item" href="/users/login">
+        Login
+      </a>
+      {%endif%}
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="field is-grouped">
+          <p class="control">
+            <a class="bd-tw-button button is-link" data-social-network="Twitter" data-social-action="tweet" target="_blank" href="https://twitter.com/rudedog9d">
+              <span class="icon">
+                <!-- use fa and fab to work with FA <5 and v5 -->
+                <i class="fa fab fa-twitter"></i>
+              </span>
+              <span>
+                Tweet the Creator!
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
 {% endblock nav %}
 
-<div id="app" class="content-center">
-  {% block content %}
-  Hello, world
-  {% endblock content %}
+<div id="app">
+  <div class="container">
+    <!--<div class="notification">-->
+       <!--This container is <strong>centered</strong> on desktop. -->
+    <!--</div>-->
+    {% block content %}
+    <h1 class='title'>Hello, World!</h1>
+    {% endblock content %}
+  </div>
 </div>
 </body>
 
@@ -55,13 +106,13 @@
   {% block footer %}
   {% endblock footer %}
   <script>
-    WebStore.user = {
-      username: '{{user.username}}',
-      credits: parseInt('{{user.credits}}'),
-      bio: '{{user.bio}}',
-      id: '{{user.id}}',
-      golden_credits: parseInt('{{user.golden_credits}}'),
-      avatar: '{{user.avatar}}'
+
+    // TODO UPDATE THIS
+    WebStore.locals.page_user = {
+      username: '{{page_user.username}}',
+      bio: '{{page_user.bio}}',
+      id: '{{page_user.id}}',
+      avatar: '{{page_user.avatar}}'
     }
   </script>
 </footer>

@@ -1,32 +1,85 @@
-{% extends "layout.html" %}
-
+{# {% extends "layout.html" %} #}
+<html>
 {% block head %}
+<!-- Vendor Javascript -->
+<script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/riot/riot+compiler.min.js"></script>
+<script src="/js/webstore.js"></script>
 
-<title>Login - {{ ProjectName }}</title>
+<!-- Custom Stylesheets -->
+<link rel='stylesheet' href='/css/style.css'/>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+
+<!-- Bulma Version 0.6.0 -->
+<link rel="stylesheet" type="text/css" href="/vendor/bulma/css/bulma.css">
+<link rel="stylesheet" type="text/css" href="/vendor/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="/css/login.css">
+
+<title>{{ 'Register' if register else 'Login' }} - {{ ProjectName }}</title>
 
 {% endblock head %}
 
 
 {% block content %}
 
-<h1>{{ 'New User Registration' if register else 'Existing User Login' }}</h1>
+<section class="hero is-success is-fullheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="column is-4 is-offset-4">
+        <h3 class="title has-text-grey">
+          {{ 'New User Registration' if register else 'Existing User Login' }}
+        </h3>
+        <p class="subtitle has-text-grey">
+          Please {{ 'Register' if register else 'Login' }} to proceed.
+        </p>
+        <div class="box">
+          <figure class="avatar">
+            <img src="/images/avatars/unknown.png">
+          </figure>
+          <form method="post">
+            <div class="field">
+              <div class="control">
+                <input class="input is-large" name="username" placeholder="Your Username" type="text" required autofocus>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <input name="password" class="input is-large" type="password" placeholder="Your Password" required>
+              </div>
+            </div>
+            <!--<div class="field">-->
+              <!--<label class="checkbox">-->
+                <!--<input name="remember_me" type="checkbox">-->
+                <!--Remember me-->
+              <!--</label>-->
+            <!--</div>-->
+            <button class="button is-block is-info is-large is-fullwidth" type="submit">{{ 'Register' if register else 'Login' }}</button>
+          </form>
+        </div>
+        <p class="has-text-grey">
+          {% if not register %}
+            <a href="register">Sign Up</a> &nbsp;·&nbsp;
+          {% else %}
+            <a href="login">Login</a> &nbsp;·&nbsp;
+          {% endif %}
+          <a href="javascript:alert('Too Bad!')">Need Help?</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% if error and error.length %}
-<ul class="collection">
-  <li id="error" class="collection-item red lighten-1">{{ error }}</li>
-</ul>
-{% endif %}
-
-<form method="post">
-  <input name="username" placeholder="Username" type="text" required autofocus>
-  <input name="password" placeholder="password" type="password" required>
-  <button class="btn btn-flat" type="submit">{{ 'Register' if register else 'Login' }}</button>
-</form>
-
-{% if not register %}
-<ul class="collection">
-  <li class="collection-item green lighten-2">Need an account? <a class="blue-text text-darken-2" href="/users/register">Sign up now!</a></li>
-</ul>
+<article id="error" class="message is-danger">
+  <div class="message-body">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et sem eget, facilisis sodales sem.
+  </div>
+</article>
 {% endif %}
 
 {% endblock %}
@@ -40,3 +93,5 @@
 </script>
 
 {% endblock footer %}
+
+</html>

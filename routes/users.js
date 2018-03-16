@@ -92,7 +92,7 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
 
 router.get('/logout', requireLogin, function (req, res) {
   req.logOut();
-  return res.redirect('/store')
+  return res.redirect('/')
 });
 
 router.get('/:username', requireLogin, function (req, res, next) {
@@ -139,22 +139,6 @@ router.post('/:username/update', requireLogin, function (req, res, next) {
       return res.send(user);
     })
   })
-});
-
-router.post('/work', requireLogin, function (req, res, next) {
-  const credits = parseInt(req.body.credits);
-  db.updateUserCredits(
-    req.user,
-    credits !== 1 ? req.user.credits - credits : 1,
-    function (err) {
-      if(err) { return next(err); }
-
-      db.findUserById(req.user.id, function (err, user) {
-        if(err || !user) { return res.send({}); }
-
-        return res.send(user);
-      })
-  });
 });
 
 module.exports = router;

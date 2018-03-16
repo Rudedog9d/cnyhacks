@@ -14,13 +14,13 @@ git lfs install
 git lfs install
 
 # Clone Repo
-git clone git@github.com:Rudedog9d/cnyhacks.git
+git clone git@gitlab.com:CNYHackathon/ctf/cnyhacks.git
 cd cnyhacks
 
-# Checkout current release
-git checkout 0.0.1 
+# Checkout relevant branch
+git checkout master
 
-# Install NPM Dependicies
+# Install NPM Dependencies
 npm install
 
 # Run it!
