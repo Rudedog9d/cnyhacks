@@ -64,12 +64,10 @@ var localRegisterStrategy = new LocalStrategy(
         }
 
         bcrypt.hash(password, saltRounds, function(err, hash) {
-          var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`, `bio`) VALUES (?, ?, ?, ?, ?);';
+          var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`bio`) VALUES (?, ?, ?);';
           var values = [
             username,  // username
             hash,      // password
-            10,        // default credits
-            5,         // default golden credits
             'I am <b>Awesome</b>!' // Default Bio
           ];
           console.log(query);
