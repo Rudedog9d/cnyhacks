@@ -95,6 +95,18 @@ router.get('/logout', requireLogin, function (req, res) {
   return res.redirect('/')
 });
 
+router.get('/change_password', requireLogin, function(req, res, next) {
+  // return res.render('users/change_password.html')
+  return res.render('users/change_password.html')
+
+
+});
+
+router.post('/change_password', requireLogin, function(req, res, next) {
+
+
+});
+
 router.get('/:username', requireLogin, function (req, res, next) {
   db.findUserByUsername(req.params.username, function (err, user) {
     if(err || !user) { return res.send('User not found', 404) }
