@@ -95,14 +95,14 @@ router.get('/logout', requireLogin, function (req, res) {
   return res.redirect('/')
 });
 
-router.get('/change_password', requireLogin, function(req, res, next) {
+router.get('/:username/change-password', requireLogin, function(req, res, next) {
   // return res.render('users/change_password.html')
   return res.render('users/change_password.html')
 
 
 });
 
-router.post('/change_password', requireLogin, function(req, res, next) {
+router.post('/:username/change-password', requireLogin, function(req, res, next) {
 
 
 });
