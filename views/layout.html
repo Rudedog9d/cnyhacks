@@ -110,12 +110,18 @@
   {% endblock footer %}
   <script>
 
-    // TODO UPDATE THIS
-    WebStore.locals.page_user = {
-      username: '{{page_user.username}}',
-      bio: '{{page_user.bio}}',
-      id: '{{page_user.id}}',
-      avatar: '{{page_user.avatar}}'
+    // // TODO UPDATE THIS
+    // WebStore.locals.page_user = {
+    //   username: '{{page_user.username}}',
+    //   bio: '{{page_user.bio}}',
+    //   id: '{{page_user.id}}',
+    //   avatar: '{{page_user.avatar}}'
+    // }
+    WebStore.User = {
+      username: '{{user.username}}',
+      bio: '{{user.bio}}',
+      id: '{{user.id}}',
+      avatar: '{{user.avatar}}'
     }
   </script>
 </footer>
