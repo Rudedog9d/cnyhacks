@@ -107,6 +107,12 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
 
 });
 
+router.get('/:username/settings', requireLogin, function(req, res, next) {
+
+  return res.render('users/settings.html')
+
+});
+
 router.get('/:username', requireLogin, function (req, res, next) {
   db.findUserByUsername(req.params.username, function (err, user) {
     if(err || !user) { return res.send('User not found', 404) }
