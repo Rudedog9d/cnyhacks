@@ -103,8 +103,19 @@ router.get('/:username/change-password', requireLogin, function(req, res, next) 
 });
 
 router.post('/:username/change-password', requireLogin, function(req, res, next) {
-  if (!req.body.username || !req.body.password) {
-    return res.render('users/change-password.html', {error: 'Please supply a username and password'})
+  // if (!req.body.username || !req.body.password) {
+  //   return res.render('users/change-password.html', {error: 'Please supply a username and password'})
+  // }
+  if ( req.password ) {
+    return res.send({
+      success: true
+    });
+
+  }
+  else {
+    return res.send({
+      error: "passwords do not match"
+    })
   }
 
 });
