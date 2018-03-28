@@ -102,17 +102,26 @@ router.get('/:username/change-password', requireLogin, function(req, res, next) 
 });
 
 router.post('/:username/change-password', requireLogin, function(req, res, next) {
-  if ( req.password ) {
-    return res.send({
-      success: true
-    });
 
-  }
-  else {
+    if ( req.body.pass1 && req.body.userid ){
+      db.updatePassword(req.body.userid, req.body.pass1, function (err, user) {
+        // if(err || !user) { return res.send('User not found', 404) }
+        return res.render('users/home.html', {page_user: user})
+        // if(err) { return res.send('update error occured', 404)}
+      });
+
+      // db.findUserByUsername(req.params.username, function (err, user) {
+      //   if(err || !user) { return res.send('User not found', 404) }
+      //   return res.render('users/home.html', {page_user: user})
+      // })
+
+
+      return res.send({ success: true})
+    }
     return res.send({
       error: "passwords do not match"
     })
-  }
+
 
 });
 

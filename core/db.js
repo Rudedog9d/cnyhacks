@@ -117,6 +117,12 @@ module.exports.findUserByUsername = function (username, done) {
   db.get(q, done)
 };
 
+module.exports.updatePassword = function (user_id, pass, done ) {
+  var q = 'UPDATE `users` SET `bio`=' + pass + " WHERE `_rowid_`='" + user_id + "';";
+  db.get(q, done)
+
+};
+
 // module.exports.getProduct = function (user, product_id, done) {
 //   return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
 //     // Return first results
