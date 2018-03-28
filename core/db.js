@@ -64,7 +64,7 @@ db.serialize(function () {
   createTable(tables.EMAILS_DB, {
     folder: 'TEXT',  // Folder that the mail belongs to
     timestamp: 'DATE',  // Time that email was recieved
-    user: 'TEXT',  // Time that email was recieved
+    username: 'TEXT',  // Time that email was recieved
     from: 'EMAIL',  // From address email was received from
     to: 'LIST',  // List of Emails in the TO header
     cc: 'LIST',  // List of Emails in the CC header
@@ -126,8 +126,8 @@ module.exports.insertUser = function (username, passwd, bio, avatar, done) {
   ], done)
 };
 
-module.exports.getEmails = function (query, done) {
-  return module.exports._query(tables.USER_DB, query, done)
+module.exports.getMail = function (query, done) {
+  return module.exports._query(tables.EMAILS_DB, query, done)
 };
 
 module.exports._queryOne = function (table, query, done) {
