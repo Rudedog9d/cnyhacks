@@ -21,6 +21,7 @@ var index = require('./routes/index');
 var admin = require('./routes/admin');
 var resources = require('./routes/resources');
 var users = require('./routes/users');
+var api = require('./routes/api');
 
 /* Use MemoryStore unless SQLite is required */
 // // Set up session store so we can use it later for cookie monster
@@ -87,6 +88,7 @@ app.use('/users', users);
 app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
+app.use('/api', api);
 app.use('/resources', resources);
 app.use('/admin', admin);
 
