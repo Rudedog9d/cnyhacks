@@ -61,22 +61,6 @@ module.exports.db.get = function (q, cb) {
 
 // Init DB
 db.serialize(function () {
-  createTable(tables.EMAILS_DB, {
-    folder: 'TEXT',  // Folder that the mail belongs to
-    timestamp: 'DATE',  // Time that email was recieved
-    user: 'TEXT',  // Time that email was recieved
-    from: 'EMAIL',  // From address email was received from
-    to: 'LIST',  // List of Emails in the TO header
-    cc: 'LIST',  // List of Emails in the CC header
-    bcc: 'LIST',  // List of Emails in the BCC header
-    subject: 'TEXT',  // Subject line of the email
-    body: 'TEXT',  // Body of email
-    markup: 'TEXT',  // Markup language of email - valid options are HTML, MARKDOWN, or NONE
-    secure: 'BOOL',  // Whether email was sent securely
-    password: 'TEXT',  // Bcrypt password to decrypt email, if it was sent encrypted and internally
-    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
-  }, true);
-
   createTable(tables.USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
