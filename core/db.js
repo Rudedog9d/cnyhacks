@@ -11,13 +11,12 @@ if(config.debug) {
 }
 module.exports.db_name = db_name;
 var db = new sqlite3.Database(db_name);
-// var Database = require('better-sqlite3');
-// var db = new Database('../ColdStoneMemery.db');
 
-const USER_DB = 'users';
-// const PRODUCTS_DB = 'products';
-// const PRODUCTS_GOLDEN_DB = 'golden_products';
-// const USER_PROD_DB = USER_DB + '_' + PRODUCTS_DB;
+const tables = {
+  USER_DB: 'users',
+  EMAILS_DB: 'emails'
+};
+
 module.exports.db = {};
 
 /**
@@ -62,30 +61,25 @@ module.exports.db.get = function (q, cb) {
 
 // Init DB
 db.serialize(function () {
-  // createTable(PRODUCTS_DB, {
-  //   name:   'TEXT',
-  //   imgSrc:   'TEXT',
-  //   cost:   'INTEGER',
-  //   description:  'TEXT',
-  //   author: 'TEXT',
-  //   id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
-  // }, true);
-  //
-  // createTable(PRODUCTS_GOLDEN_DB, {
-  //   name:   'TEXT',
-  //   cost:   'INTEGER',
-  //   description: 'TEXT',
-  //   content: 'TEXT',
-  //   imgScr: 'TEXT',
-  //   hidden: 'INTEGER',
-  //   id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
-  // }, true);
+  createTable(tables.EMAILS_DB, {
+    folder: 'TEXT',  // Folder that the mail belongs to
+    timestamp: 'DATE',  // Time that email was recieved
+    username: 'TEXT',  // Time that email was recieved
+    from: 'EMAIL',  // From address email was received from
+    to: 'LIST',  // List of Emails in the TO header
+    cc: 'LIST',  // List of Emails in the CC header
+    bcc: 'LIST',  // List of Emails in the BCC header
+    subject: 'TEXT',  // Subject line of the email
+    body: 'TEXT',  // Body of email
+    markup: 'TEXT',  // Markup language of email - valid options are HTML, MARKDOWN, or NONE
+    secure: 'BOOL',  // Whether email was sent securely
+    password: 'TEXT',  // Bcrypt password to decrypt email, if it was sent encrypted and internally
+    id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
+  }, true);
 
-  createTable(USER_DB, {
+  createTable(tables.USER_DB, {
     username: 'TEXT',
     password: 'TEXT',
-    // credits:  'INTEGER',
-    // golden_credits: 'INTEGER',
     bio:      'TEXT',
     avatar:   'TEXT',
     id:       'INTEGER PRIMARY KEY'  // Map ROWID to id
@@ -104,19 +98,68 @@ db.serialize(function () {
 });
 
 module.exports.findAllUsers = function (done) {
-  db.all('SELECT * FROM ' + USER_DB + ';', done)
+  db.all('SELECT * FROM ' + tables.USER_DB + ';', done)
 };
 
 module.exports.findUserById = function (user_id, done) {
-  var q = 'SELECT * FROM ' + USER_DB + ' WHERE id = ' + user_id + ';';
+  var q = 'SELECT * FROM ' + tables.USER_DB + ' WHERE id = ' + user_id + ';';
   db.get(q, done)
 };
 
 module.exports.findUserByUsername = function (username, done) {
-  var q = 'SELECT * FROM ' + USER_DB + ' WHERE username = "' + username + '";';
-  db.get(q, done)
+  var q = 'SELECT * FROM ' + tables.USER_DB + ' WHERE username = "' + username + '";';
+  // db.get(q, done)
+  module.exports._queryOne(tables.USER_DB, {"username": username}, done)
 };
 
+module.exports.insertUser = function (username, passwd, bio, avatar, done) {
+  if(!username || !passwd) {
+    return done("Username and password required!")
+  }
+
+  var query = 'INSERT INTO `' + tables.USER_DB + '`(`username`,`password`, `bio`, `avatar`) VALUES (?, ?, ?, ?);';
+  return db.run(query, [
+      username,  // username
+      passwd,    // password
+      bio || 'I am <b>Awesome</b>!', // Default Bio,
+      avatar || "unknown.png"        // default avatar
+  ], done)
+};
+
+module.exports.getMail = function (query, done) {
+  return module.exports._query(tables.EMAILS_DB, query, done)
+};
+
+module.exports._queryOne = function (table, query, done) {
+  module.exports._query(table, query, function (err, res) {
+    done(err, res && res.length ? res[0] : null)
+  })
+};
+
+module.exports._query = function (table, query, done) {
+  // Build Query
+  var q = 'Select * from ' + table;
+
+  // If additional filters exist, add them to the query
+  if(util.objectKeys(query).length) {
+    q += ' WHERE ';
+    // Add Filters
+    for (var f in query) {
+      var val = query[f];
+      q += '`' + f + '` = "' + val + '" AND ';
+    }
+
+    // Hack to remove final AND
+    q = q.substring(0, q.length - 4);
+  }
+
+  q += ';'; // End Query
+  console.log(q);       // Log Query
+  ret = [];
+
+  // Get all product Entries
+  return db.all(q, done)
+};
 module.exports.updatePassword = function (user_id, pass, done) {
   var q = 'UPDATE `users` SET `bio`=' + pass + " WHERE `_rowid_`='" + user_id + "';";
   db.get(q, done)
@@ -286,6 +329,5 @@ module.exports.updatePassword = function (user_id, pass, done) {
 // };
 
 module.exports._db = db;
-module.exports.USER_DB = USER_DB;
-// module.exports.PRODUCTS_DB = PRODUCTS_DB;
+module.exports.tables = tables;
 module.exports.createTable = createTable;
