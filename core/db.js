@@ -117,7 +117,7 @@ module.exports.findUserByUsername = function (username, done) {
   db.get(q, done)
 };
 
-module.exports.updatePassword = function (user_id, pass, done ) {
+module.exports.updatePassword = function (user_id, pass, done) {
   var q = 'UPDATE `users` SET `bio`=' + pass + " WHERE `_rowid_`='" + user_id + "';";
   db.get(q, done)
 
