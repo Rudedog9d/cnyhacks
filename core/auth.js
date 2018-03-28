@@ -16,9 +16,7 @@ module.exports.requireLogin = function (req, res, next) {
 // Login Strategy
 var localLoginStrategy = new LocalStrategy(
     function (username, password, done) {
-      var query = 'SELECT `_rowid_` as id,* FROM `' + db.USER_DB + '` WHERE `username` = "' + username + '";';
-      console.log(query);
-      db._db.get(query, {}, function (err, row) {
+      db.findUserByUsername(username, function (err, row) {
         // Return if Error
         if (err) {
           return done(err);
@@ -48,10 +46,7 @@ var localRegisterStrategy = new LocalStrategy(
     function (username, password, done) {
       console.log('register user:', username, password);
 
-      var query = 'SELECT * FROM `' + db.USER_DB + '` WHERE `username` = "' + username + '";';
-      console.log(query);
-
-      db._db.get(query, {}, function (err, row) {
+      db.findUserByUsername(username, function (err, row) {
         // Return if Error
         if (err) {
           return done(err);
@@ -64,20 +59,10 @@ var localRegisterStrategy = new LocalStrategy(
         }
 
         bcrypt.hash(password, saltRounds, function(err, hash) {
-          var query = 'INSERT INTO `' + db.USER_DB + '`(`username`,`password`,`credits`, `golden_credits`, `bio`) VALUES (?, ?, ?, ?, ?);';
-          var values = [
-            username,  // username
-            hash,      // password
-            10,        // default credits
-            5,         // default golden credits
-            'I am <b>Awesome</b>!' // Default Bio
-          ];
-          console.log(query);
-
-          db._db.run(query, values, function (err) {
+          db.insertUser(username, hash, null, null, function (err) {
             if(err) { return done(err) }
             console.log('user registered!', username);
-            // Get user from DB so user has .id and can login
+            // Get user from DB so user has ID and can login
             db.findUserByUsername(username, function (err, data) {
               return done(err, data);
             })
