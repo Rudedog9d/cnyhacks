@@ -110,7 +110,7 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
   if ( req.body.pass1 && req.body.username ){
       bcrypt.hash(req.body.pass1, saltRounds, function(err, hash) {
         db.updatePassword(req.body.username, req.body.pass1, function (err, user) {
-          return res.send({ success: true})
+          return res.send({ success: true })
 
         });
       });
