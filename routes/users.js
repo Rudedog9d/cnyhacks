@@ -104,26 +104,12 @@ router.get('/:username/change-password', requireLogin, function(req, res, next) 
 });
 
 router.post('/:username/change-password', requireLogin, function(req, res, next) {
-
-
-
   if ( req.body.pass1 && req.body.username ){
       bcrypt.hash(req.body.pass1, saltRounds, function(err, hash) {
-        db.updatePassword(req.body.username, req.body.pass1, function (err, user) {
+        db.updatePassword(req.body.username, hash, function (err, user) {
           return res.send({ success: true })
-
         });
       });
-
-
-
-      // db.findUserByUsername(req.params.username, function (err, user) {
-      //   if(err || !user) { return res.send('User not found', 404) }
-      //   return res.render('users/home.html', {page_user: user})
-      // })
-
-
-      // return res.send({ success: true})
     }
 });
 
