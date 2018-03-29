@@ -90,16 +90,13 @@
 </nav>
 {% endblock nav %}
 
-<div id="app">
-  <div class="container">
-    <!--<div class="notification">-->
-       <!--This container is <strong>centered</strong> on desktop. -->
-    <!--</div>-->
+{% block _app %}
+  <div id="app">
     {% block content %}
-    <h1 class='title'>Hello, World!</h1>
+      <h1 class='title'>Hello, World!</h1>
     {% endblock content %}
   </div>
-</div>
+{% endblock _app %}
 </body>
 
 <footer>
