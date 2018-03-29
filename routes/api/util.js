@@ -1,9 +1,8 @@
 /**
  * Craft Common API responses
  * @param res
- * @param message
  * @param success
- * @param data
+ * @param meta
  * @param status
  * @returns {*}
  * @private
