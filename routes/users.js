@@ -105,7 +105,8 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
 
     if ( req.body.pass1 && req.body.userid ){
       db.updatePassword(req.body.userid, req.body.pass1, function (err, user) {
-        return res.render('users/home.html', {page_user: user})
+        return res.send({ success: true})
+
       });
 
       // db.findUserByUsername(req.params.username, function (err, user) {
