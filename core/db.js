@@ -160,9 +160,12 @@ module.exports._query = function (table, query, done) {
   // Get all product Entries
   return db.all(q, done)
 };
-module.exports.updatePassword = function (user_id, pass, done) {
+module.exports.updatePassword = function (username, pass, done) {
+  db.findUserByUsername(username , function(err, user){
+
+  });
   var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
-  db.get(q, done)
+  db.run(q, done)
 
 };
 
