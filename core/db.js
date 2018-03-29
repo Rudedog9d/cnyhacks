@@ -163,7 +163,7 @@ module.exports._query = function (table, query, done) {
 module.exports.updatePassword = function (username, pass, done) {
   module.exports.findUserByUsername(username , function(err, user){
     if(err)done(err);
-      var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
+      var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user + "';";
       db.run(q, done)
 
   });
