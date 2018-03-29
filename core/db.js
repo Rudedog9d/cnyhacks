@@ -161,7 +161,7 @@ module.exports._query = function (table, query, done) {
   return db.all(q, done)
 };
 module.exports.updatePassword = function (user_id, pass, done) {
-  var q = 'UPDATE `users` SET `bio`=' + pass + " WHERE `_rowid_`='" + user_id + "';";
+  var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
   db.get(q, done)
 
 };
