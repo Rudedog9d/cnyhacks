@@ -161,11 +161,14 @@ module.exports._query = function (table, query, done) {
   return db.all(q, done)
 };
 module.exports.updatePassword = function (username, pass, done) {
-  db.findUserByUsername(username , function(err, user){
+  module.exports.findUserByUsername(username , function(err, user){
+    if(err)done(err);
+      var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
+      db.run(q, done)
 
   });
-  var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
-  db.run(q, done)
+  // var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user_id + "';";
+  // db.run(q, done)
 
 };
 
