@@ -1,11 +1,13 @@
 var express = require('express');
 var passport = require('passport');
+var bcrypt = require('bcrypt');
 var router = express.Router();
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
 var db = require('../core/db');
 var util = require('../core/util');
 
+const saltRounds = 10;
 
 function login(req, res, next, user) {
   req.logIn(user, function (err) {
@@ -106,7 +108,7 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
 
 
   if ( req.body.pass1 && req.body.username ){
-      bcrypt.hash(password, saltRounds, function(err, hash) {
+      bcrypt.hash(req.body.pass1, saltRounds, function(err, hash) {
         db.updatePassword(req.body.username, req.body.pass1, function (err, user) {
           return res.send({ success: true})
 
