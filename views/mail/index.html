@@ -1,0 +1,25 @@
+{% extends "layout-fluid.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/css/inbox.css">
+{% endblock %}
+
+{% block content %}
+<mail-box></mail-box>
+{% endblock %}
+
+{% block footer %}
+<!-- Tags -->
+<script type="riot/tag" src="/tags/mail-box.tag.html"></script>
+<script type="riot/tag" src="/tags/mail-list.tag.html"></script>
+<script type="riot/tag" src="/tags/mail-preview.tag.html"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js" integrity="sha256-QHdJObhDO++VITP6S4tMlDHRWMaUOk+s/xWIRgF/YY0=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js" integrity="sha256-4PIvl58L9q7iwjT654TQJM+C/acEyoG738iL8B8nhXg=" crossorigin="anonymous"></script>
+
+<script>
+  $(document).ready(function(){
+    riot.mount('mail-box');
+  });
+</script>
+{% endblock %}

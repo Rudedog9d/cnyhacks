@@ -18,6 +18,7 @@ var db = require('./core/db');
 
 // Routes
 var index = require('./routes/index');
+var mail = require('./routes/mail');
 var admin = require('./routes/admin');
 var resources = require('./routes/resources');
 var users = require('./routes/users');
@@ -89,6 +90,7 @@ app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
 app.use('/api', api);
+app.use('/mail', mail);
 app.use('/resources', resources);
 app.use('/admin', admin);
 
