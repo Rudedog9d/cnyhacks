@@ -1,14 +1,31 @@
 <mail-box>
-  <!-- column 1 -->
-    <!-- Folder List -->
+  <div class='columns'>
+    <!-- column 1 -->
+    <aside class='column is-2 aside hero is-fullheight'>
+      <div class="hero-body" style="padding-top: 1rem;">
+        <div class="container">
+          <!-- Folder List -->
+          <a class="button">
+            <span class="icon is-small">
+              <i class="fa fas fa-folder"></i>
+            </span>
+            <span>Inbox</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+  
+    <!-- Column 2 -->
+    <div class='column is-4 hero is-fullheight'>
+      <!-- Control Buttons -->
+      <mail-list ref='mailList'></mail-list>
+    </div>
 
-  <!-- Column 2 -->
-    <!-- Control Buttons -->
-    <mail-list></mail-list>
-
-  <!-- Column 3 -->
-  <mail-preview></mail-preview>
-
+    <div class="column is-6 hero is-fullheight" id="message-pane">
+      <!-- Column 3 -->
+      <message-pane ref='messagePane'></message-pane>
+    </div>
+  </div>
   <script>
     var tag = this;
 
