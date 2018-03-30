@@ -1,0 +1,19 @@
+<mail-box>
+  <!-- column 1 -->
+    <!-- Folder List -->
+
+  <!-- Column 2 -->
+    <!-- Control Buttons -->
+    <mail-list></mail-list>
+
+  <!-- Column 3 -->
+  <mail-preview></mail-preview>
+
+  <script>
+    var tag = this;
+
+    tag.on('mount', function () {
+      console.log('mail-box mounted!');
+    })
+  </script>
+</mail-box>
