@@ -1,8 +1,39 @@
 <message-pane>
-  <p>Message Pane</p>
+  <!-- Email Metadata and Header -->
+  <section class="hero" if='{item}'>
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          {item.subject}
+        </h1>
+        <h2 class="subtitle">
+          {item.from}
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- Email Body -->
+  <section class="hero is-light is-fullheight" if='{item}'>
+    <div class="hero-body">
+      <div ref="content" class="">
+        {item.body}
+      </div>
+    </div>
+  </section>
 
   <script>
     var tag = this;
+    tag.item = null;
+
+    tag.showMail = function(mail) {
+      if(!mail) {
+        tag.item = null;
+        throw "Must specify email to view"
+      }
+      tag.item = mail;
+      $(tag.refs.content).html(mail.body);
+      tag.update();
+    };
 
     tag.on('mount', function () {
       console.log('message-pane mounted!');
