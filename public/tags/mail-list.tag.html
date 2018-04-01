@@ -59,11 +59,90 @@
     </div>
   </section>
 
+  <section ref='list' class="hero">
+    <div each='{items}' class="box mail-item" onclick='{onSelect}'>
+      <article class="media">
+        <div class="media-content">
+          <p>
+            <strong>{subject}</strong>
+          </p>
+          <p>
+            <small>{from}</small>
+          </p>
+          <div class="level truncate">
+            { renderHtmlText(body) }
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <script>
     var tag = this;
+    tag.selected = null;
+
+    tag.onSelect = function(e) {
+      console.log('select', e.item);
+      tag.trigger('select', e.item);
+    };
 
     tag.on('mount', function () {
       console.log('mail-list mounted!');
-    })
+    });
+
+    /**
+     * Virtually render the HTML, then return the text to be displayed
+     *   Ex, "<a href='...'>Test</a>" returns "Test" as a string
+     * @param html String: String of HTML to parse
+     * @returns {String} Parsed HTML
+     */
+    tag.renderHtmlText = function(html) {
+      return $(`<p>${html}</p>`).text();
+    };
+
+    tag.items = [
+      {
+        "to": "admin@cnyhacks",
+        "from": "Dr. Mantis Tobogin",
+        "cc": "CDC",
+        "subject": "ViRu$",
+        "body": "If you have been to Mclarens Pub, you may have a ViRu$!!. Not just any virus, but a ComPUTR vIrus!!\n\nAct fast! Learn more here from <a href=\"https://www.youtube.com/watch?v=_88RnoYS8As\">Dr. Mantis Dobogan</a>"
+      },
+      {
+        "to": "admin@cnyhacks",
+        "from": "admin_$ecr3t$",
+        "cc": "CNYHACKATHON PARTICIPANTS",
+        "subject": "Admin Password was reset",
+        "body": "Hey, so you had too many failed login attempts, so your account was locked. I can't just send you your new password, so navigate to our secure website and view your new password to unlock your account.\n\n<a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>https://www.cnyhackathon.domain/passwordReset?unlock=true</a>\n\nFrom you're friend, best friend, lead singer, wingman, pointman and lover,\n\nadmin_$ecr3t$\n\nP.S. I love you"
+      },
+      {
+        "to": "Black Team",
+        "from": "Red Team",
+        "cc": "CNYHACKATHON PARTICIPANTS",
+        "subject": "Da curant SMACKDOWN on Blu team",
+        "body": "Yo, black team, r u seein these kiddies on blue t3am?? Talk bout 'X gon give it to ya'!! X being red team, ya being blue team!\n\nR you sure we should, `step it up a notch?' Som one here as ben itching to lay waste to som boat sectors if ya no wat aye mean?!\n\nYours forever and in eternal love,\n\nR3d Tiem"
+      },
+      {
+        "to": "CNYHACKATHON PARTICIPANTS",
+        "from": "Nigerian Prince, the famous one",
+        "cc": "",
+        "subject": "n33d mo monie",
+        "body": "Yo, its Princ Ali here.\n\nMy genie from the magic lamp left me after THREE WISHES. Like, who does that?? I need weigh more than 3 wishes man?? This is 'Merica, land of the Free, home of the brave my man!!\n\nSo, I'm gon need dat money now mi friend. I've got nowhere else to go, I had to eat Apu, Princess Jasmine left me for Jafar, and I got thrown in the dungeon again for taking apples.\n\nPls help me man.\n\nForever dreaming of your love and embrace,\n\nPrince Ali, Fabulous he, Ali Ababwa"
+      },
+      {
+        "to": "CNYHACKATHON PARTICIPANTS",
+        "from": "M",
+        "cc": "",
+        "subject": "Do YOU want to eat me??!",
+        "body": "<a href='https://www.youtube.com/watch?v=qfZcxeqa1g4'>Im a human now!</a>\n\nHEY! Do YOU wnat to eat me!!?\n\nIm a human now!\n\nI luk so gud!!\n\nNo longer an M!! Im a real boi!!\n\nYour friend, from now til the end of time, forever freeing space from the grasp of the Klingons,\n\nM"
+      },
+      {
+        "to": "CNYHACKATHON PARTICIPANTS",
+        "from": "Ants in my eyes, Johnson",
+        "cc": "",
+        "subject": "By Stuff!!",
+        "body": "I'm Ants in My Eyes Johnson here at Ants in My Eyes Johnson's Electronics! I mean, there's so many ants in my eyes! And there's so many TVs! Microwaves! Radios, I think! I can't, I'm not 100 percent sure what we have here in stock, because I can't see anything! Our prices, I hope, aren't too low! Check out this refrigerator! Only $200! What about this microwave? Only $100, that's fair! I'm Ants in My Eyes Johnson! Everything's black! I can't see a thing! And also, I can't feel anything either, did I mention that? But that's not as catchy, as having ants in your eyes, so... that always goes... y'know, off by the wayside! I can't feel, it's a very rare disease, all my all my nerves, they don't allow for the sensation of touch! So I never know what's going on! Am I standing, sitting? I don't know!"
+      }
+    ]
   </script>
 </mail-list>
