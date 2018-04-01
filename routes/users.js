@@ -104,16 +104,26 @@ router.get('/:username/change-password', requireLogin, function(req, res, next) 
 });
 
 router.post('/:username/change-password', requireLogin, function(req, res, next) {
-  if ( req.body.pass1 && req.body.username ){
-      bcrypt.hash(req.body.pass1, saltRounds, function(err, hash) {
-        db.updatePassword(req.body.username, hash, function (err, user) {
-          if (!err) {
-            return res.send({success: true})
-          }
+  if ( req.body.pass1 !== req.body.pass2 ){
+    return res.send({err: "passwords do not match"})
+  }
+  else if ( !req.body.username ){
+    return res.send({err: "user does not exist"})
+  }
+  else if ( req.body.pass1 && req.body.username ){
+    
+    bcrypt.hash(req.body.pass1, saltRounds, function(err, hash) {
+      db.updatePassword(req.body.username, hash, function (err, user) {
+        if (!err) {
+          return res.send({success: true})
+        }
 
-        });
       });
-    }
+    });
+  }
+  else {
+    return res.send({err: "error occurred"})
+  }
 });
 
 router.get('/:username/settings', requireLogin, function(req, res, next) {
