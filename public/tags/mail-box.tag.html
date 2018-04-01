@@ -31,6 +31,9 @@
 
     tag.on('mount', function () {
       console.log('mail-box mounted!');
+      tag.refs.mailList.on('select', function(item) {
+        tag.refs.messagePane.showMail(item);
+      })
     })
   </script>
 </mail-box>
