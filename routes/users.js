@@ -124,11 +124,6 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
       });
     }
   }
-  else
-    {
-      return res.send({err: "error occurred"})
-    }
-
 });
 
 router.get('/:username/settings', requireLogin, function(req, res, next) {
