@@ -1,22 +1,37 @@
+/* Todo: this is for folder list on mail page */
 .aside {
   display: block;
   background-color: #F9F9F9;
   border-right: 1px solid #DEDEDE;
 }
+
+/* Make div stick to top of screen */
+.sticky {
+  position: fixed;
+  top: 0;
+}
+
+/* Hack to force child elements to have proper width */
+.sticky * {
+  width: inherit;
+}
+
+/* Truncate Text if it overflows */
 .truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mail-item:hover {
-  background-color: lightgray;
-}
-
+/* Mail list items */
 .mail-item {
   border-radius: 0;
   margin-bottom: 0 !important;
   min-width: 400px;
+}
+
+.mail-item:hover {
+  background-color: lightgray;
 }
 
 .mail-item:first-child {
@@ -26,6 +41,7 @@
 .mail-item:last-child {
   border-radius: 0 0 5px 5px;
 }
+
 /*
 html,body {
   font-family: 'Open Sans', serif;
