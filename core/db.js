@@ -162,11 +162,12 @@ module.exports._query = function (table, query, done) {
 };
 module.exports.updatePassword = function (username, pass, done) {
   module.exports.findUserByUsername(username , function(err, user){
-    if(err) {
-      res.send({success: false});
-      done(err)
+    if( err || !user ) {
+      err = new Error("Something went wrong");
+      return done(err);
     }
-    else {
+    else  {
+      done(err);
       var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user.id + "';";
       db.run(q, done);
       return user

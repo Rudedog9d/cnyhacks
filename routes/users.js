@@ -107,9 +107,6 @@ router.post('/:username/change-password', requireLogin, function(req, res, next)
   if ( req.body.pass1 !== req.body.pass2 ){
     return res.send({err: "passwords do not match"})
   }
-  else if ( !req.body.username ){
-    return res.send({err: "user does not exist"})
-  }
   else if ( req.body.pass1 && req.body.username ) {
     if (/[^a-zA-Z0-9]/.test(req.body.pass1)) {
       return res.send({err: "password is not alphanumeric!"})
