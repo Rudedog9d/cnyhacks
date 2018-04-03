@@ -1,8 +1,8 @@
 // Todo use an actual configuration manager
 config = {
   // development || production
-  mode: 'production',
-  ProjectName: 'CNY Hacks'
+  mode: 'development',
+  ProjectName: 'ReeMail'
 };
 
 // default to production
