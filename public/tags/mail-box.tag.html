@@ -1,17 +1,17 @@
 <mail-box>
   <div class='columns'>
-    <!-- column 1 -->
-    <aside class='column is-2 aside hero is-fullheight'>
-      <div class="hero-body" style="padding-top: 1rem;">
-        <div class="container">
+    <!-- column 1 - padding-right overrides column padding -->
+    <aside class='column is-1 hero is-light is-fullheight' style="padding-right: 0">
+      <div style="padding-top: 1rem;">
           <!-- Folder List -->
-          <a class="button">
-            <span class="icon is-small">
-              <i class="fa fas fa-folder"></i>
-            </span>
-            <span>Inbox</span>
-          </a>
-        </div>
+          <section>
+            <a each="{folder in folders}" href="/mail/{folder}" class="navbar-item">
+              <span class="icon is-small">
+                <i class="fa fas fa-folder"></i>
+              </span>
+              <span>{folder}</span>
+            </a>
+          </section>
       </div>
     </aside>
   
@@ -21,13 +21,18 @@
       <mail-list ref='mailList'></mail-list>
     </div>
 
-    <div class="column is-6 hero is-fullheight" id="message-pane">
+    <div class="column is-7 hero is-fullheight" id="message-pane">
       <!-- Column 3 -->
       <message-pane ref='messagePane'></message-pane>
     </div>
   </div>
   <script>
     var tag = this;
+    tag.folders = [
+        'Inbox',
+        'Sent',
+        'Admin Stuff'
+    ]
 
     tag.on('mount', function () {
       console.log('mail-box mounted!');
