@@ -6,6 +6,7 @@ var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
 var db = require('../core/db');
 var util = require('../core/util');
+var apiUtil = require('../routes/api/util');
 
 const saltRounds = 10;
 
@@ -106,16 +107,16 @@ router.get('/:username/change-password', requireLogin, function(req, res, next) 
 router.post('/:username/change-password', requireLogin, function(req, res, next) {
   if ( req.body.pass1 && req.body.username ) {
     if (/[^a-zA-Z0-9]/.test(req.body.pass1)) {
-      return res.send({err: "password is not alphanumeric!"})
+      return apiUtil.apiError(res, 'password is not alphanumeric!')
     }
     else {
       bcrypt.hash(req.body.pass1, saltRounds, function (err, hash) {
         db.updatePassword(req.body.username, hash, function (err, user) {
           if (!err) {
-            return res.send({success: true})
+            return apiUtil.apiResponse(res, 'update successful')
           }
           else{
-            return res.send({success: false})
+            return apiUtil.apiError(res, 'an error has occurred!')
           }
         });
       });
