@@ -63,17 +63,16 @@ module.exports.db.get = function (q, cb) {
 db.serialize(function () {
   createTable(tables.EMAILS_DB, {
     folder: 'TEXT',  // Folder that the mail belongs to
-    timestamp: 'DATE',  // Time that email was recieved
+    // timestamp: 'DATE',  // Time that email was recieved
     username: 'TEXT',  // Time that email was recieved
-    from: 'EMAIL',  // From address email was received from
-    to: 'LIST',  // List of Emails in the TO header
-    cc: 'LIST',  // List of Emails in the CC header
-    bcc: 'LIST',  // List of Emails in the BCC header
+    from: 'TEXT',  // From address email was received from
+    to: 'TEXT',  // List of Emails in the TO header
+    cc: 'TEXT',  // List of Emails in the CC header
+    bcc: 'TEXT',  // List of Emails in the BCC header
     subject: 'TEXT',  // Subject line of the email
     body: 'TEXT',  // Body of email
     markup: 'TEXT',  // Markup language of email - valid options are HTML, MARKDOWN, or NONE
     secure: 'BOOL',  // Whether email was sent securely
-    password: 'TEXT',  // Bcrypt password to decrypt email, if it was sent encrypted and internally
     id:     'INTEGER PRIMARY KEY'  // Map ROWID to id
   }, true);
 
@@ -123,7 +122,10 @@ module.exports.insertUser = function (username, passwd, bio, avatar, done) {
       passwd,    // password
       bio || 'I am <b>Awesome</b>!', // Default Bio,
       avatar || "unknown.png"        // default avatar
-  ], done)
+  ], function(err, a, b) {
+    // Todo create intro email
+    return done(err, a, b)
+  })
 };
 
 module.exports.getMail = function (query, done) {
