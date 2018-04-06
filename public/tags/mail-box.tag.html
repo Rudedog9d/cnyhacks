@@ -28,14 +28,25 @@
   </div>
   <script>
     var tag = this;
+    tag.items = opts.items || [];
+
+    // todo set dynamically
     tag.folders = [
         'Inbox',
         'Sent',
         'Admin Stuff'
-    ]
+    ];
+
+    tag.updateItems = function(){
+      // todo: finish
+    };
 
     tag.on('mount', function () {
-      console.log('mail-box mounted!');
+      console.log('mail-box mounted!', tag);
+
+      tag.refs.mailList.items = tag.items;
+      tag.refs.mailList.update();
+
       tag.refs.mailList.on('select', function(item) {
         tag.refs.messagePane.showMail(item);
       })

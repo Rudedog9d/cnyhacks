@@ -1,9 +1,10 @@
 <user-info>
 
-  <h1 class='title'>Welcome back, { WebStore.locals.page_user.username }</h1>
+  <h1 class='title'>Welcome back, { user.username }</h1>
 
   <script>
     var tag = this;
+    tag.user = opts.user || {};
 
     tag.on('mount', function () {
       console.log('user-info mounted!');
