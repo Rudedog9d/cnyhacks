@@ -8,4 +8,7 @@ config = {
 // default to production
 config.debug = (config.mode === 'development');
 
+// Default Email
+config.welcomeEmailPath = 'welcome-email.json';
+
 module.exports = config;

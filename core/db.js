@@ -1,6 +1,8 @@
 var config = require('../config');
 var util = require('./util');
 var sqlite3 = require('sqlite3').verbose();
+var path = require('path');
+var fs = require('fs');
 var db_name = '';
 if(config.debug) {
   db_name = config.ProjectName.replace(/ /g, '') + '_DEV.db';
@@ -122,10 +124,55 @@ module.exports.insertUser = function (username, passwd, bio, avatar, done) {
       passwd,    // password
       bio || 'I am <b>Awesome</b>!', // Default Bio,
       avatar || "unknown.png"        // default avatar
-  ], function(err, a, b) {
-    // Todo create intro email
-    return done(err, a, b)
+  ], function(err) {
+    if(err)
+      return done(err);
+    // return up a directory to access root of repo by default
+    let filepath = path.join(__dirname, '..', config.welcomeEmailPath);
+    fs.readFile(filepath, 'utf8', function (err, data) {
+      if(err){
+        let err = new Error(`Could not read welcome email from ${config.welcomeEmailPath}`);
+        err.status = 500;
+        return done(err)
+      }
+
+      let welcomeEmail = JSON.parse(data);
+      welcomeEmail.username = username;
+      welcomeEmail.to = username;
+      welcomeEmail.from = "ReeMail System";
+      welcomeEmail.folder = "inbox";
+      module.exports.insertMail(welcomeEmail, done)
+    })
   })
+};
+
+module.exports.insertMail = function (info, done) {
+  if(!info.username || !info.folder) {
+    let err = new Error(`Username and Folder are required!`);
+    err.status = 500;
+    return done(err)
+  }
+
+  // Base Query
+  let query = 'INSERT INTO `' + tables.EMAILS_DB + '` (';//'`(`username`,`password`, `bio`, `avatar`) VALUES (?, ?, ?, ?);';
+  let valuesString = ') VALUES (';
+  let vals = [];
+
+  // Add Keys Generically
+  for(key in info) {
+    query += `\`${key}\`,`;
+    valuesString += `?, `;
+    vals.push(info[key]);
+  }
+
+  // Remove trailing comma/space
+  query = query.substring(0, query.length - 1);
+  valuesString = valuesString.substring(0, valuesString.length - 2);
+
+  // End Query
+  query += valuesString + ");";
+
+  return db.run(query, vals, done)
 };
 
 module.exports.getMail = function (query, done) {
