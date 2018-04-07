@@ -219,6 +219,181 @@ module.exports._query = function (query, done) {
   // Get all product Entries
   return db.all(query, done)
 };
+module.exports.updatePassword = function (username, pass, done) {
+  module.exports.findUserByUsername(username , function(err, user){
+    if( err || !user ) {
+      err = new Error("Something went wrong");
+      return done(err);
+    }
+    else  {
+      var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user.id + "';";
+      db.run(q, done);
+      return user
+    }
+  });
+};
+
+// module.exports.getProduct = function (user, product_id, done) {
+//   return module.exports.getAllProducts(user, {id: product_id}, function (err, rows) {
+//     // Return first results
+//     done(err, rows[0])
+//   })
+// };
+//
+// module.exports.getAllProducts = function (user, filter, done) {
+//   if(typeof filter === 'function') {
+//     // Filter is actually CB - How do the JS libraries do it?
+//     done = filter;
+//   }
+//
+//   // Build Query - Thanks @tbutts
+//   var q = 'Select * from ' + PRODUCTS_DB +
+//       ' LEFT JOIN (SELECT * FROM ' + USER_PROD_DB + ' where user_id = ' + user.id + ') AS up' +
+//       ' on products.id = up.product_id';
+//
+//   // If additional filters exist, add them to the query
+//   if(util.objectKeys(filter).length) {
+//     q += ' WHERE ';
+//     // Add Filters
+//     for (var f in filter) {
+//       var val = filter[f];
+//       q += '`' + f + '` = ' + val + ' AND ';
+//     }
+//
+//     // Hack to remove final AND
+//     q = q.substring(0, q.length - 4);
+//   }
+//
+//   q += ' ORDER BY owned DESC;'; // End Query
+//   console.log(q);       // Log Query
+//   ret = [];
+//
+//   // Get all product Entries
+//   db.each(q,
+//     // Each row Callback
+//     function(err, row) {
+//       if(err){ return done(err) }
+//
+//       var obj = {};
+//       for(prop in row) {
+//         // Skip invalid props (todo improve)
+//         if(prop === 'product_id' || prop === 'user_id')
+//           continue;
+//         obj[prop] = row[prop];
+//       }
+//
+//       // Set owned to a Boolean value
+//       obj['owned'] = !!row.owned;
+//
+//       // Add to return list
+//       ret.push(obj)
+//     },
+//     // Complete callback
+//     function (err, numRows) {
+//       return done(err, ret)
+//     });
+// };
+//
+// /**
+//  * Purchase a product. Updates the User's credits first, then updates DB with purchase on success
+//  * @param user    User Object purchasing Item
+//  * @param product Product Object to purchase [ from getProduct() ]
+//  * @param done    Callback when operation is finished - will be called with params from db.run()
+//  */
+// module.exports.purchaseProduct = function (user, product, done) {
+//   module.exports.updateUserCredits(user, 0 - product.cost, function (err) {
+//     if(err) { return done ? done(err) : false }
+//
+//     // Check if there is already an Entry in the User_Product Table
+//     var q = 'SELECT * FROM ' + USER_PROD_DB +
+//         ' WHERE `user_id` = ' + user.id +
+//         ' AND `product_id` = ' + product.id;
+//     db.get(q, function (err, row) {
+//       var q = '';
+//       if(row) {
+//         // Update the existing entry (just in case)
+//         q = 'UPDATE ' + USER_PROD_DB +
+//             ' SET owned = 1' +
+//             ' WHERE `user_id` = ' + user.id +
+//             ' AND `product_id` = ' + product.id;
+//       } else {
+//         // Insert new entry to DB representing a user owns that item
+//         q = 'INSERT INTO ' + USER_PROD_DB + '(user_id, product_id, owned)' +
+//             ' VALUES (' +
+//             user.id + ',' +     // user_id
+//             product.id + ',' +  // product_id
+//             '1' + ')'           // owned
+//       }
+//
+//       // Run the Update/Insert
+//       db.run(q, [], done);
+//     });
+//   });
+// };
+//
+// /**
+//  * Modify a User's credits
+//  * @param user          User to Modify
+//  * @param creditChange  Amount of Credits (Positive/Negative)
+//  * @param done
+//  */
+// module.exports.updateUserCredits = function (user, creditChange, done) {
+//   module.exports.updateUser(user, {credits: (user.credits + creditChange)}, done)
+// };
+//
+// /**
+//  * Modify a User
+//  * @param user    User to Modify
+//  * @param updates Fields to update
+//  * @param done
+//  */
+// module.exports.updateUser = function (user, updates, done) {
+//   var q = 'UPDATE ' + USER_DB + ' SET ';
+//   for(update in updates) {
+//     var v = updates[update];
+//     q += '`' + update + '` = ' + (typeof v === 'string' ? '"' + v + '"' : v) + ','
+//   }
+//   // Hack to remove final ','
+//   q = q.substring(0, q.length - 1);
+//   q += ' WHERE `id` = ' + user.id + ';';
+//
+//   db.run(q, {}, function (err) {
+//     done(err, Object.assign(user, updates))
+//   })
+// };
+//
+// module.exports.getGoldenProduct = function (product_id, user, done) {
+//   return module.exports.getAllGoldenProducts(user, {product_id: product_id}, done)
+// };
+//
+// module.exports.getAllGoldenProducts = function (user, filter, done) {
+//   if(typeof filter === 'function') {
+//     // Filter is actually CB - How do the JS libraries do it?
+//     done = filter;
+//   }
+//
+//   // Build Query
+//   var q = 'SELECT * FROM ' + PRODUCTS_GOLDEN_DB + (filter.length ? ' WHERE' : '' );
+//
+//   // Add Filters
+//   for (var f in filter) {
+//     var val = filter[f];
+//     q += '`' + f + '` = ' + val + ' AND ';
+//   }
+//
+//
+//   q += ';'; // End Query
+//
+//   console.log(q);
+//
+//   // Get all product Entries
+//   db.all(q,
+//
+//       // Complete callback
+//       function (err, rows) {
+//         return done(null, rows)
+//       });
+// };
 
 module.exports._db = db;
 module.exports.tables = tables;
