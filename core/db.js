@@ -108,7 +108,7 @@ module.exports.findUserById = function (user_id, done) {
 module.exports.findUserByUsername = function (username, done) {
   var q = 'SELECT * FROM ' + tables.USER_DB + ' WHERE username = "' + username + '";';
   // db.get(q, done)
-  module.exports._queryOne(tables.USER_DB, {"username": username}, done)
+  module.exports.queryOne(tables.USER_DB, {"username": username}, done)
 };
 
 module.exports.insertUser = function (username, passwd, bio, avatar, done) {
@@ -129,16 +129,21 @@ module.exports.insertUser = function (username, passwd, bio, avatar, done) {
 };
 
 module.exports.getMail = function (query, done) {
-  return module.exports._query(tables.EMAILS_DB, query, done)
+  return module.exports.query(tables.EMAILS_DB, query, done)
 };
 
-module.exports._queryOne = function (table, query, done) {
-  module.exports._query(table, query, function (err, res) {
+module.exports.getFolders = function (username, done) {
+  let q = `SELECT DISTINCT folder FROM \`${tables.EMAILS_DB}\` WHERE username = "${username}";`;
+  return module.exports._query(q, done)
+};
+
+module.exports.queryOne = function (table, query, done) {
+  module.exports.query(table, query, function (err, res) {
     done(err, res && res.length ? res[0] : null)
   })
 };
 
-module.exports._query = function (table, query, done) {
+module.exports.query = function (table, query, done) {
   // Build Query
   var q = 'Select * from ' + table;
 
@@ -156,11 +161,16 @@ module.exports._query = function (table, query, done) {
   }
 
   q += ';'; // End Query
-  console.log(q);       // Log Query
+
+  return module.exports._query(q, done)
+};
+
+module.exports._query = function (query, done) {
+  console.log(query);       // Log Query
   ret = [];
 
   // Get all product Entries
-  return db.all(q, done)
+  return db.all(query, done)
 };
 
 module.exports._db = db;
