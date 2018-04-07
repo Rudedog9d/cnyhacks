@@ -167,7 +167,6 @@ module.exports.updatePassword = function (username, pass, done) {
       return done(err);
     }
     else  {
-      done(err);
       var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user.id + "';";
       db.run(q, done);
       return user
