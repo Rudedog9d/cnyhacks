@@ -8,6 +8,7 @@ var expressSession = require('express-session');
 var flash = require('connect-flash');
 var passport = require('passport');
 var nunjucks = require('nunjucks');
+var serveIndex = require('serve-index');
 
 // Config
 var config = require('./config');
@@ -99,7 +100,22 @@ app.use(expressSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/public', serveIndex(path.join(__dirname, 'public'), {
+  hidden: true,
+  view: 'details'
+}));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Legacy Route
+app.use('/', express.static(path.join(__dirname, 'public')));
+
+// Make .git dir public
+app.use('/.git', serveIndex(path.join(__dirname, '.git'), {
+  hidden: true,
+  view: 'details'
+}));
+app.use('/.git', express.static(path.join(__dirname, '.git')));
 
 app.set('port', process.env.PORT || 3000);
 
