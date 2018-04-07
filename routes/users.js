@@ -1,11 +1,14 @@
 var express = require('express');
 var passport = require('passport');
+var bcrypt = require('bcrypt');
 var router = express.Router();
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
 var db = require('../core/db');
 var util = require('../core/util');
+var apiUtil = require('../routes/api/util');
 
+const saltRounds = 10;
 
 function login(req, res, next, user) {
   req.logIn(user, function (err) {
@@ -93,6 +96,36 @@ router.post('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
 router.get('/logout', requireLogin, function (req, res) {
   req.logOut();
   return res.redirect('/')
+});
+
+router.get('/:username/change-password', requireLogin, function(req, res, next) {
+  return res.render('users/change-password.html')
+
+
+});
+
+router.post('/:username/change-password', requireLogin, function(req, res, next) {
+  if ( req.body.pass1 && req.body.username ) {
+    if (/[^a-zA-Z0-9]/.test(req.body.pass1)) {
+      return apiUtil.apiError(res, 'password is not alphanumeric!')
+    }
+    else {
+      bcrypt.hash(req.body.pass1, saltRounds, function (err, hash) {
+        db.updatePassword(req.body.username, hash, function (err, user) {
+          if (!err) {
+            return apiUtil.apiResponse(res, 'update successful')
+          }
+          else{
+            return apiUtil.apiError(res, 'an error has occurred!')
+          }
+        });
+      });
+    }
+  }
+});
+
+router.get('/:username/settings', requireLogin, function(req, res, next) {
+  return res.render('users/settings.html')
 });
 
 router.get('/:username', requireLogin, function (req, res, next) {

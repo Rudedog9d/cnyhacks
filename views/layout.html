@@ -59,8 +59,11 @@
           <a class="navbar-item" href="/users/{{user.username}}">
             My Account
           </a>
-          <a class="navbar-item" href="/users/setttings">
+          <a class="navbar-item" href="/users/{{ user.username }}/setttings">
             Settings
+          </a>
+          <a class="navbar-item" href="/users/{{ user.username }}/change-password">
+            Change Password
           </a>
           <a class="navbar-item" href="/users/logout">
             Logout
