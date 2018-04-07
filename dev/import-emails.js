@@ -1,10 +1,8 @@
 var fs = require('fs');
-var readline = require('readline');
 const db = require('../core/db');
-var SqlString = require('sqlstring');
 
 // Setup input/output streams
-inputFile = 'emails.json';
+inputFile = 'dev/emails.json';
 // const sourceStream = fs.createReadStream(inputFile);
 // const sourceInterface = readline.createInterface(sourceStream);
 
