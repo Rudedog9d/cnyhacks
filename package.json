@@ -27,6 +27,7 @@
     "passport-local": "^1.0.0",
     "riot": "^3.7.0",
     "serve-favicon": "~2.4.2",
+    "serve-index": "^1.9.1",
     "sqlite3": "^3.1.13"
   }
 }
