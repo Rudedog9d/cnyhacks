@@ -9,7 +9,7 @@
               <span class="icon is-small">
                 <i class="fa fas fa-folder"></i>
               </span>
-              <span>{folder}</span>
+              <span class="is-capitalized">{folder}</span>
             </a>
           </section>
       </div>
@@ -32,10 +32,17 @@
 
     // todo set dynamically
     tag.folders = [
-        'Inbox',
-        'Sent',
-        'Admin Stuff'
+        'inbox',
     ];
+
+    tag.updateFolders = function(){
+      $.get({
+        url: '/api/v1/mail/folders.json',
+        success: function (res) {
+          tag.update({folders: res.data})
+        }
+      })
+    };
 
     tag.updateItems = function(){
       // todo: finish
@@ -43,6 +50,8 @@
 
     tag.on('mount', function () {
       console.log('mail-box mounted!', tag);
+
+      tag.updateFolders();
 
       tag.refs.mailList.items = tag.items;
       tag.refs.mailList.update();

@@ -5,7 +5,7 @@
     <div class="hero-body px-0">
       <div class="container">
         <h1 class="title">
-          {item.subject}
+          {item.subject || '[NO SUBJECT]'}
         </h1>
         <h2 class="subtitle">
           {item.from}
@@ -43,7 +43,7 @@
   <!--<section class="hero is-light is-fullheight" if='{item}'>-->
   <section class="box m10rgt" if='{item}'>
     <!--<div class="hero-body" style="align-items: normal">-->
-      <div ref="content"></div>
+    <div ref="content"></div>
     <!--</div>-->
   </section>
   </div>
@@ -61,18 +61,21 @@
       tag.update();
       // html() must be called after update()
       // or refs.content might not exist
-      $(tag.refs.content).html(mail.body);
+      // $(tag.refs.content).html(mail.body.replace('\n', '<br />'));
+      $(tag.refs.content).html(marked(mail.body));
     };
 
     tag.on('mount', function () {
-      console.log('message-pane mounted!');
+      console.log('message-pane mounted!', tag);
 
       // Cache selectors outside callback for performance.
       var $window = $(window),
           $stickyEl = $(tag.refs.this),
           elTop = $stickyEl.offset().top;
       $window.scroll(function() {
-        $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+        // hack around <pre> tags misbehaving
+        if($stickyEl.has('pre').length == 0)
+          $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
       });
     });
   </script>

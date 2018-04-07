@@ -19,6 +19,7 @@
     "font-awesome": "^4.7.0",
     "helper-css": "^1.2.0",
     "jquery": "^3.3.1",
+    "marked": "^0.3.19",
     "materialize-css": "^0.100.2",
     "morgan": "~1.8.1",
     "nunjucks": "^3.0.1",
