@@ -8,13 +8,27 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/:folder', function (req, res, next) {
+  let folder = req.params.folder;
+
+  if(folder === "admin") {
+    if(!req.query.password) {
+      let err = new Error("A Password parameter is required for this page.");
+      err.status = 403;
+      return next(err)
+    } else if(req.query.password !== "hack3rman") {
+      let err = new Error("Incorrect Username or Password!");
+      err.status = 403;
+      return next(err)
+    }
+  }
+
   let locals = {
-    folder: req.params.folder
+    folder: folder
   };
 
   db.getMail({
     username: req.user.username,
-    folder: req.params.folder
+    folder: folder
   }, function(err, data) {
     if(err) {
       return done(err);
