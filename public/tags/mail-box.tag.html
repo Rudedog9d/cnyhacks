@@ -39,7 +39,9 @@
       $.get({
         url: '/api/v1/mail/folders.json',
         success: function (res) {
-          tag.update({folders: res.data})
+          // Don't display hidden folders
+          let d = res.data;res=[];for(i in d)if(!d[i].hexEncode().startsWith('0021'))res.push(d[i]);
+          tag.update({folders: res})
         }
       })
     };
