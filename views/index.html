@@ -1,7 +1,60 @@
 {% extends "layout.html" %}
 
+{% block head %}
+<style>
+  html,body {
+    height: 100%;
+  }
+  body {
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ), url('https://unsplash.it/1200/900?random') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+  .hero .nav, .hero.is-success .nav {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .hero .subtitle {
+    padding: 3rem 0;
+    line-height: 1.5;
+  }
+  .field {
+    justify-content: center !important;
+  }
+</style>
+{% endblock head %}
+
 {% block content %}
-<h1 class='title'>Hello, World!</h1>
+<div class="hero-body is-fullheight">
+  <div class="container has-text-centered">
+    <div class="column is-6 is-offset-3">
+      <div class="box">
+        <h1 class="title">
+          Welcome to ReeMail!
+        </h1>
+        <h2 class="subtitle">
+          This is the most memable email client around. You've choosen correctly to keep your mail safe and secure with ReeMail!
+        </h2>
+        <div class="field is-grouped">
+            <a href='/users/register' class="button is-info">
+              Sign Up Today!
+            </a>
+        </div>
+        <div class="field is-grouped">
+            Already have an account?
+            <a href='/users/login'>
+              &nbsp;Login
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block footer %}
