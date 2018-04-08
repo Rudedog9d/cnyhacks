@@ -1,0 +1,53 @@
+/* Todo: this is for folder list on mail page */
+.aside {
+  display: block;
+  background-color: #F9F9F9;
+  border-right: 1px solid #DEDEDE;
+}
+
+/* ========= SECTION: Message Pane Modifications ======== */
+/* #Content represents the container around the rendered body of an email */
+#content {}
+
+#content ul li:before {
+  content: '- '
+}
+
+/* Make div stick to top of screen */
+.sticky {
+  position: fixed;
+  top: 0;
+}
+
+/* Hack to force child elements to have proper width */
+.sticky * {
+  width: inherit;
+}
+
+/* ========= END SECTION ======== */
+
+/* Truncate Text if it overflows */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mail list items */
+.mail-item {
+  border-radius: 0;
+  margin-bottom: 0 !important;
+  min-width: 400px;
+}
+
+.mail-item:hover {
+  background-color: lightgray;
+}
+
+.mail-item:first-child {
+  border-radius: 5px 5px 0 0;
+}
+
+.mail-item:last-child {
+  border-radius: 0 0 5px 5px;
+}

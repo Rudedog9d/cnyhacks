@@ -1,0 +1,66 @@
+<mail-box>
+  <div class='columns'>
+    <!-- column 1 - padding-right overrides column padding -->
+    <aside class='column is-1 hero is-light is-fullheight' style="padding-right: 0">
+      <div style="padding-top: 1rem;">
+          <!-- Folder List -->
+          <section>
+            <a each="{folder in folders}" href="/mail/{folder}" class="navbar-item">
+              <span class="icon is-small">
+                <i class="fa fas fa-folder"></i>
+              </span>
+              <span class="is-capitalized">{folder}</span>
+            </a>
+          </section>
+      </div>
+    </aside>
+  
+    <!-- Column 2 -->
+    <div class='column is-4 hero is-fullheight'>
+      <!-- Control Buttons -->
+      <mail-list ref='mailList'></mail-list>
+    </div>
+
+    <div class="column is-7 hero is-fullheight" id="message-pane">
+      <!-- Column 3 -->
+      <message-pane ref='messagePane'></message-pane>
+    </div>
+  </div>
+  <script>
+    var tag = this;
+    tag.items = opts.items || [];
+
+    // todo set dynamically
+    tag.folders = [
+        'inbox',
+    ];
+
+    tag.updateFolders = function(){
+      $.get({
+        url: '/api/v1/mail/folders.json',
+        success: function (res) {
+          // Don't display hidden folders
+          let d = res.data;res=[];for(i in d)if(!d[i].hexEncode().startsWith('0021'))res.push(d[i]);
+          tag.update({folders: res})
+        }
+      })
+    };
+
+    tag.updateItems = function(){
+      // todo: finish
+    };
+
+    tag.on('mount', function () {
+      console.log('mail-box mounted!', tag);
+
+      tag.updateFolders();
+
+      tag.refs.mailList.items = tag.items;
+      tag.refs.mailList.update();
+
+      tag.refs.mailList.on('select', function(item) {
+        tag.refs.messagePane.showMail(item);
+      })
+    })
+  </script>
+</mail-box>

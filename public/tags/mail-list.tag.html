@@ -1,0 +1,79 @@
+<mail-list>
+  <!--<section ref='controls' class='hero'>
+    <div class="hero-body" style="padding-top: 1rem;">
+      <div class="container">
+        <div class="field has-addons">
+          <p class="control">
+            <a class="button">
+              <span class="icon is-small">
+                <i class="fa fa-chevron-left"></i>
+              </span>
+            </a>
+          </p>
+          <p class="control">
+            <a class="button is-active is-primary">1</a>
+          </p>
+          <p class="control">
+            <a class="button">2</a>
+          </p>
+          <p class="control">
+            <a class="button">3</a>
+          </p>
+          <p class="control">
+            <a class="button">
+              <span class="icon is-small">
+                <i class="fa fa-chevron-right"></i>
+              </span>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <section ref='list' class="hero">
+    <h1 class="title">Inbox</h1>
+    <div each='{items}' class="box mail-item" onclick='{onSelect}'>
+      <article class="media">
+        <div class="media-content">
+          <p>
+            <strong>{subject || '[NO SUBJECT]'}</strong>
+          </p>
+          <p>
+            <small>{from}</small>
+          </p>
+          <div class="level truncate">
+            { renderHtmlText(body) }
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    var tag = this;
+    tag.items = opts.items || [];
+    tag.selected = null;
+
+    tag.onSelect = function(e) {
+      console.log('select', e.item);
+      tag.trigger('select', e.item);
+    };
+
+    tag.on('mount', function () {
+      console.log('mail-list mounted!', tag);
+    });
+
+    /**
+     * Virtually render the HTML, then return the text to be displayed
+     *   Ex, "<a href='...'>Test</a>" returns "Test" as a string
+     * @param html String: String of HTML to parse
+     * @returns {String} Parsed HTML
+     */
+    tag.renderHtmlText = function(html) {
+      return $(`<p>${html}</p>`).text();
+    };
+
+  </script>
+</mail-list>

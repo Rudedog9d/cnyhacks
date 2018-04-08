@@ -1,11 +1,14 @@
 var express = require('express');
 var passport = require('passport');
+var bcrypt = require('bcrypt');
 var router = express.Router();
 var auth = require('../core/auth');
 var requireLogin = auth.requireLogin;
 var db = require('../core/db');
 var util = require('../core/util');
+var apiUtil = require('../routes/api/util');
 
+const saltRounds = 10;
 
 function login(req, res, next, user) {
   req.logIn(user, function (err) {
@@ -13,11 +16,11 @@ function login(req, res, next, user) {
       return next(err);
     }
 
-    // Redirect to user homepage on successful login
+    // Redirect to webmail on successful login
     if(req.query.url){
       return res.redirect(req.query.url)
     }
-    return res.redirect('/users/' + user.username)
+    return res.redirect('/mail/')
   })
 }
 
@@ -95,50 +98,24 @@ router.get('/logout', requireLogin, function (req, res) {
   return res.redirect('/')
 });
 
-router.get('/:username', requireLogin, function (req, res, next) {
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(err || !user) { return res.send('User not found', 404) }
-    return res.render('users/home.html', {page_user: user})
-  })
+router.get('/change-password', requireLogin, function(req, res, next) {
+  return res.render('users/change-password.html')
 });
 
-// GET User object (This is a really, REALLY dumb route)
-router.get('/api/:username', requireLogin, function (req, res, next) {
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(err || !user) { return res.send('User not found', 404) }
-    return res.send(user);
-  })
-});
-
-router.post('/:username/update', requireLogin, function (req, res, next) {
-  var updates = {};
-  var valid_fields = ['bio', 'avatar'];
-  for(prop in valid_fields) {
-    prop = valid_fields[prop];
-    if(req.body[prop]) {
-      updates[prop] = req.body[prop];
+router.post('/change-password', requireLogin, function(req, res, next) {
+  let password = req.body.password;
+  if ( password && req.body.username ) {
+    if (/[^a-zA-Z0-9]/.test()) {
+      return apiUtil.apiError(res, 'password is not alphanumeric!')
     }
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+      db.updatePassword(req.body.username, hash, function (err, user) {
+        if (err)
+          return apiUtil.apiError(res, err.message, err.status);
+        return apiUtil.apiResponse(res, 'update successful')
+      });
+    });
   }
-
-  if(!util.objectKeys(updates)) {
-    res.send('invalid options provided', 400)
-  }
-
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(!user) {
-      return next(404, 'User not Found')
-    }
-    if(req.user.id !== user.id) {
-      console.log(req.user.id, user)
-      return res.send({error: 'no permission to edit user ' + user.username}, 403)
-    }
-    if(err || !user) { return res.send('User not found', 404) }
-    db.updateUser(user, updates, function (err, user) {
-      if(err) { return res.sendStatus(200); /* OK, but no user */ }
-
-      return res.send(user);
-    })
-  })
 });
 
 module.exports = router;
