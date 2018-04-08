@@ -20,7 +20,8 @@
 <script>
   $(document).ready(function(){
     riot.mount('mail-box', {
-      items: {{util.parseJSON(items)}}
+      items: {{util.parseJSON(items)}},
+      folder: "{{folder}}"
     });
   });
 </script>

@@ -33,7 +33,7 @@
   -->
 
   <section ref='list' class="hero">
-    <h1 class="title">Inbox</h1>
+    <h1 class="title is-capitalized">{folder}</h1>
     <div each='{items}' class="box mail-item" onclick='{onSelect}'>
       <article class="media">
         <div class="media-content">
@@ -55,6 +55,7 @@
     var tag = this;
     tag.items = opts.items || [];
     tag.selected = null;
+    tag.folder = opts.folder || "";
 
     tag.onSelect = function(e) {
       console.log('select', e.item);

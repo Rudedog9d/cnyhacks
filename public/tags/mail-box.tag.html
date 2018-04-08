@@ -29,6 +29,7 @@
   <script>
     var tag = this;
     tag.items = opts.items || [];
+    tag.folder = opts.folder || "";
 
     // todo set dynamically
     tag.folders = [
@@ -49,6 +50,10 @@
     tag.updateItems = function(){
       // todo: finish
     };
+
+    tag.on('update', function () {
+      tag.refs.mailList.folder = tag.folder;
+    });
 
     tag.on('mount', function () {
       console.log('mail-box mounted!', tag);
