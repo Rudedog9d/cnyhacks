@@ -1,14 +1,17 @@
-var fs = require('fs');
+/**
+ * Set up Database for ReeMail. Run from root directory of the repo
+ * node dev/setup.js
+ */
+const fs = require('fs');
 const db = require('../core/db');
+const bcrypt = require('bcrypt');
+
+const ADMIN_ACCOUNT = "admin@reemail";
+
+/* Import Emails from JSON file */
 
 // Setup input/output streams
 inputFile = 'dev/emails.json';
-// const sourceStream = fs.createReadStream(inputFile);
-// const sourceInterface = readline.createInterface(sourceStream);
-
-// const outputFile = 'out.json';
-// const outputStream = fs.createWriteStream(outputFile);
-
 let items = [];
 
 // Read in netstat data line by line
@@ -18,10 +21,9 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   let json = JSON.parse(data);
 
   for(line of json) {
-  // line = json[0];
     let email = {
       'folder': line.folder || "inbox",
-      'username': line.username || "admin@reemail",
+      'username': line.username || ADMIN_ACCOUNT,
       'from': line.from,
       'to': line.to,
       'cc': line.cc || undefined,
@@ -59,15 +61,18 @@ fs.readFile(inputFile, 'utf8', function(err, data) {
   }
 });
 
-// // On Read finished
-// sourceInterface.on('close', function() {
-//   // File completely read, do bulk insert
-//   console.log(`Finished Reading Successfully!`);
-//
-//   // do something on finish here
-//   // outputStream.write(JSON.stringify(json) + '\n');
-//   // outputStream.close();
-//
-//   // Exit success
-//   process.exit(0);
-// });
+/* Set up Admin User */
+function genPasswd(len = 8) {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < len; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+
+bcrypt.hash(genPasswd(20), 10, function (err, hash) {
+  if(err) throw err;
+  db.insertUser(ADMIN_ACCOUNT, hash, 'ReeMail Administrator', null)
+});
