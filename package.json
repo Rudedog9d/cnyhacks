@@ -18,6 +18,8 @@
     "express-session": "^1.15.6",
     "font-awesome": "^4.7.0",
     "helper-css": "^1.2.0",
+    "jquery": "^3.3.1",
+    "marked": "^0.3.19",
     "materialize-css": "^0.100.2",
     "morgan": "~1.8.1",
     "nunjucks": "^3.0.1",
@@ -25,6 +27,7 @@
     "passport-local": "^1.0.0",
     "riot": "^3.7.0",
     "serve-favicon": "~2.4.2",
+    "serve-index": "^1.9.1",
     "sqlite3": "^3.1.13"
   }
 }

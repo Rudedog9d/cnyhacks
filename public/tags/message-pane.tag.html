@@ -1,0 +1,79 @@
+<message-pane>
+  <div ref='this'>
+  <!-- Email Metadata and Header -->
+  <section class="hero" if='{item}'>
+    <div class="hero-body px-0">
+      <div class="container">
+        <h1 class="title">
+          {item.subject || '[NO SUBJECT]'}
+        </h1>
+        <h2 class="subtitle">
+          {item.from}
+        </h2>
+        <div class="field has-addons">
+          <p class="control">
+            <a class="button">
+              <span class="icon is-small">
+                <i class="fa fas fa-trash"></i>
+              </span>
+              <!--<span>Left</span>-->
+            </a>
+          </p>
+          <p class="control">
+            <a class="button">
+              <span class="icon is-small">
+                <i class="fa fas fa-folder"></i>
+              </span>
+              <!--<span>Center</span>-->
+            </a>
+          </p>
+          <p class="control">
+            <a class="button">
+              <span class="icon is-small">
+                <i class="fa fas fa-tag"></i>
+              </span>
+              <!--<span>Right</span>-->
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Email Body -->
+  <section class="box m10rgt" if='{item}'>
+    <div id='content' ref="content"></div>
+  </section>
+  </div>
+
+  <script>
+    var tag = this;
+    tag.item = null;
+
+    tag.showMail = function(mail) {
+      if(!mail) {
+        tag.item = null;
+        throw "Must specify email to view"
+      }
+      tag.item = mail;
+      tag.update();
+      // html() must be called after update()
+      // or refs.content might not exist
+      // $(tag.refs.content).html(mail.body.replace('\n', '<br />'));
+      $(tag.refs.content).html(marked(mail.body));
+    };
+
+    tag.on('mount', function () {
+      console.log('message-pane mounted!', tag);
+
+      // Cache selectors outside callback for performance.
+      var $window = $(window),
+          $stickyEl = $(tag.refs.this),
+          elTop = $stickyEl.offset().top;
+      $window.scroll(function() {
+        // Add stick selector if the email is smaller than the webpage size
+        if($stickyEl.height() < $window.height())
+          $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
+      });
+    });
+  </script>
+</message-pane>

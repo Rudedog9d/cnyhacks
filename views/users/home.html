@@ -18,7 +18,9 @@
 
 <script>
   $(document).ready(function () {
-    riot.mount('*')
+    riot.mount('user-info', {
+      user: {{util.parseJSON(page_user)}}
+    });
   });
 </script>
 

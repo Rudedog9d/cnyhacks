@@ -8,6 +8,7 @@ var expressSession = require('express-session');
 var flash = require('connect-flash');
 var passport = require('passport');
 var nunjucks = require('nunjucks');
+var serveIndex = require('serve-index');
 
 // Config
 var config = require('./config');
@@ -18,9 +19,11 @@ var db = require('./core/db');
 
 // Routes
 var index = require('./routes/index');
+var mail = require('./routes/mail');
 var admin = require('./routes/admin');
 var resources = require('./routes/resources');
 var users = require('./routes/users');
+var api = require('./routes/api');
 
 /* Use MemoryStore unless SQLite is required */
 // // Set up session store so we can use it later for cookie monster
@@ -36,10 +39,44 @@ config.ProjectName = config.ProjectName || 'CNY Hackathon';
 var app = express();
 
 // Set up templating ( jinga style 8-D )
-nunjucks.configure(path.join(__dirname, 'views'), {
+let nj = nunjucks.configure(path.join(__dirname, 'views'), {
   express: app,
   watch: config.debug,
   noCache: config.debug
+});
+
+// unused
+nj.addFilter('base64', function(str) {
+  return Buffer.from(str, 'utf8').toString('base64');
+});
+
+// unused
+nj.addFilter('encodeUri', function(str) {
+  return encodeURIComponent(str)
+});
+
+nj.addFilter('hexify', function(str) {
+  var hex, i;
+
+  var result = "";
+  for (i=0; i<str.length; i++) {
+    hex = str.charCodeAt(i).toString(16);
+    result += ("000"+hex).slice(-4);
+  }
+
+  return result
+});
+
+// unused
+nj.addFilter('unhexify', function(str) {
+  var j;
+  var hexes = str.match(/.{1,4}/g) || [];
+  var back = "";
+  for(j = 0; j<hexes.length; j++) {
+    back += String.fromCharCode(parseInt(hexes[j], 16));
+  }
+
+  return back;
 });
 
 
@@ -63,7 +100,22 @@ app.use(expressSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/public', serveIndex(path.join(__dirname, 'public'), {
+  hidden: true,
+  view: 'details'
+}));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Legacy Route
+app.use('/', express.static(path.join(__dirname, 'public')));
+
+// Make .git dir public
+app.use('/.git', serveIndex(path.join(__dirname, '.git'), {
+  hidden: true,
+  view: 'details'
+}));
+app.use('/.git', express.static(path.join(__dirname, '.git')));
 
 app.set('port', process.env.PORT || 3000);
 
@@ -87,6 +139,8 @@ app.use('/users', users);
 app.use(auth.requireLogin);
 
 /* AUTHENTICATED ROUTES ONLY */
+app.use('/api', api);
+app.use('/mail', mail);
 app.use('/resources', resources);
 app.use('/admin', admin);
 

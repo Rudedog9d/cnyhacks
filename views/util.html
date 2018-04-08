@@ -1,0 +1,21 @@
+<!-- Define caller to call and trim whitespace from formatting nunjucks function -->
+{% macro parseJSON(data) %}{{_parseJSON(data) | trim}}{% endmacro %}
+
+<!-- Dump JSON data in a way that is safe to the webpage, and set up -->
+<!-- what is required to parse the data (hexdecode and JSON.parse) -->
+<!-- To be used within a <script> block! -->
+{% macro _parseJSON(data) %}
+  JSON.parse("{{ data | dump | safe | hexify }}".hexDecode())
+{% endmacro %}
+
+<!-- Define caller to call and trim whitespace from formatting nunjucks function -->
+{% macro setvar(var_name, data, check=true) %}{{_setvar(var_name, data, check) | trim}}{% endmacro %}
+
+<!-- Set JS variable var_name to the JSON in the data variable -->
+<!-- Check will check if the data is falsey, and not set the variable if it is -->
+<!-- To be used within a <script> block! -->
+{% macro _setvar(var_name, data, check=true) %}
+  {% if not check or ( check and data ) %}
+    {{var_name}} = {{parseJSON(data)}};
+  {% endif %}
+{% endmacro %}
