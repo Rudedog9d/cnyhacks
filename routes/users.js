@@ -39,14 +39,14 @@ router.get('/api/users', requireLogin, function (req, res, next) {
 /* GET Login Page */
 router.get('/login', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
   if (req.user) {
-    return res.redirect('/users/' + req.user.username)
+    return res.redirect('/mail');
   }
   return res.render('users/login.html', {register: false, error: req.flash('error')});
 });
 
 router.get('/register', /* UNAUTHENTICATED ROUTE */ function (req, res, next) {
   if (req.user) {
-    return res.redirect('/users/' + req.user.username)
+    return res.redirect('/mail/')
   }
   return res.render('users/login.html', {register: true, error: req.flash('error')});
 });
