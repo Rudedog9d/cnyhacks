@@ -89,14 +89,6 @@
   },
   {
     "folder": "inbox",
-    "to": "admin",
-    "from": "Green, Charles",
-    "cc": "",
-    "subject": "",
-    "body": "Should we do this one?"
-  },
-  {
-    "folder": "inbox",
     "to": "Red Team",
     "from": "Rice, James",
     "cc": "CNYHACKATHON PARTICIPANTS",

@@ -122,7 +122,7 @@ module.exports.insertUser = function (username, passwd, bio, avatar, done) {
   return db.run(query, [
       username,  // username
       passwd,    // password
-      bio || 'I am <b>Awesome</b>!', // Default Bio,
+      bio || 'Basic ReeMail User, free plan', // Default Bio,
       avatar || "unknown.png"        // default avatar
   ], function(err) {
     if(err)
