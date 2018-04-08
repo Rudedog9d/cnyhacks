@@ -221,15 +221,17 @@ module.exports._query = function (query, done) {
 };
 module.exports.updatePassword = function (username, pass, done) {
   module.exports.findUserByUsername(username , function(err, user){
-    if( err || !user ) {
-      err = new Error("Something went wrong");
+    if(err) {
       return done(err);
     }
-    else  {
-      var q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user.id + "';";
-      db.run(q, done);
-      return user
+    if(!user) {
+      err = new Error("User Not Found");
+      err.status = 404;
+      return done(err)
     }
+
+    let q = "UPDATE `users` SET `password`='" + pass + "' WHERE `_rowid_`='" + user.id + "';";
+    db.run(q, done);
   });
 };
 

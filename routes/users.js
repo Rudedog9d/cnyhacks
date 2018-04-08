@@ -16,11 +16,11 @@ function login(req, res, next, user) {
       return next(err);
     }
 
-    // Redirect to user homepage on successful login
+    // Redirect to webmail on successful login
     if(req.query.url){
       return res.redirect(req.query.url)
     }
-    return res.redirect('/users/' + user.username)
+    return res.redirect('/mail/')
   })
 }
 
@@ -98,80 +98,24 @@ router.get('/logout', requireLogin, function (req, res) {
   return res.redirect('/')
 });
 
-router.get('/:username/change-password', requireLogin, function(req, res, next) {
+router.get('/change-password', requireLogin, function(req, res, next) {
   return res.render('users/change-password.html')
-
-
 });
 
-router.post('/:username/change-password', requireLogin, function(req, res, next) {
-  if ( req.body.pass1 && req.body.username ) {
-    if (/[^a-zA-Z0-9]/.test(req.body.pass1)) {
+router.post('/change-password', requireLogin, function(req, res, next) {
+  let password = req.body.password;
+  if ( password && req.body.username ) {
+    if (/[^a-zA-Z0-9]/.test()) {
       return apiUtil.apiError(res, 'password is not alphanumeric!')
     }
-    else {
-      bcrypt.hash(req.body.pass1, saltRounds, function (err, hash) {
-        db.updatePassword(req.body.username, hash, function (err, user) {
-          if (!err) {
-            return apiUtil.apiResponse(res, 'update successful')
-          }
-          else{
-            return apiUtil.apiError(res, 'an error has occurred!')
-          }
-        });
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+      db.updatePassword(req.body.username, hash, function (err, user) {
+        if (err)
+          return apiUtil.apiError(res, err.message, err.status);
+        return apiUtil.apiResponse(res, 'update successful')
       });
-    }
+    });
   }
-});
-
-router.get('/:username/settings', requireLogin, function(req, res, next) {
-  return res.render('users/settings.html')
-});
-
-router.get('/:username', requireLogin, function (req, res, next) {
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(err || !user) { return res.send('User not found', 404) }
-    return res.render('users/home.html', {page_user: user})
-  })
-});
-
-// GET User object (This is a really, REALLY dumb route)
-router.get('/api/:username', requireLogin, function (req, res, next) {
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(err || !user) { return res.send('User not found', 404) }
-    return res.send(user);
-  })
-});
-
-router.post('/:username/update', requireLogin, function (req, res, next) {
-  var updates = {};
-  var valid_fields = ['bio', 'avatar'];
-  for(prop in valid_fields) {
-    prop = valid_fields[prop];
-    if(req.body[prop]) {
-      updates[prop] = req.body[prop];
-    }
-  }
-
-  if(!util.objectKeys(updates)) {
-    res.send('invalid options provided', 400)
-  }
-
-  db.findUserByUsername(req.params.username, function (err, user) {
-    if(!user) {
-      return next(404, 'User not Found')
-    }
-    if(req.user.id !== user.id) {
-      console.log(req.user.id, user)
-      return res.send({error: 'no permission to edit user ' + user.username}, 403)
-    }
-    if(err || !user) { return res.send('User not found', 404) }
-    db.updateUser(user, updates, function (err, user) {
-      if(err) { return res.sendStatus(200); /* OK, but no user */ }
-
-      return res.send(user);
-    })
-  })
 });
 
 module.exports = router;

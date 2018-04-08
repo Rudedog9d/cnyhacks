@@ -52,17 +52,11 @@
         Web Mail
       </a>
       <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link" href="/users/{{user.username}}">
+        <a class="navbar-link">
           {{ user.username }}
         </a>
         <div class="navbar-dropdown is-boxed">
-          <a class="navbar-item" href="/users/{{user.username}}">
-            My Account
-          </a>
-          <a class="navbar-item" href="/users/{{ user.username }}/setttings">
-            Settings
-          </a>
-          <a class="navbar-item" href="/users/{{ user.username }}/change-password">
+          <a class="navbar-item" href="/users/change-password">
             Change Password
           </a>
           <a class="navbar-item" href="/users/logout">
