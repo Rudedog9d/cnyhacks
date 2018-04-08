@@ -40,11 +40,8 @@
     </div>
   </section>
   <!-- Email Body -->
-  <!--<section class="hero is-light is-fullheight" if='{item}'>-->
   <section class="box m10rgt" if='{item}'>
-    <!--<div class="hero-body" style="align-items: normal">-->
     <div id='content' ref="content"></div>
-    <!--</div>-->
   </section>
   </div>
 
@@ -73,8 +70,8 @@
           $stickyEl = $(tag.refs.this),
           elTop = $stickyEl.offset().top;
       $window.scroll(function() {
-        // hack around <pre> tags misbehaving
-        if($stickyEl.has('pre').length == 0)
+        // Add stick selector if the email is smaller than the webpage size
+        if($stickyEl.height() < $window.height())
           $stickyEl.toggleClass('sticky', $window.scrollTop() > elTop);
       });
     });
